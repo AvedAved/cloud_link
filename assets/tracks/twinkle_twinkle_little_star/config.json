@@ -1,0 +1,180 @@
+{
+  "schemaVersion": 1,
+  "type": "neon-lanes-track",
+  "day": 1,
+  "title": "Twinkle Twinkle Little Star",
+  "audioFile": "track.mp3",
+  "bpm": 90,
+  "travelBeats": 4,
+  "duration": 32.394,
+  "notes": [
+    {
+      "time": 0.035,
+      "lane": 0
+    },
+    {
+      "time": 0.708,
+      "lane": 0
+    },
+    {
+      "time": 1.37,
+      "lane": 1
+    },
+    {
+      "time": 2.044,
+      "lane": 1
+    },
+    {
+      "time": 2.705,
+      "lane": 0
+    },
+    {
+      "time": 3.379,
+      "lane": 0
+    },
+    {
+      "time": 4.04,
+      "lane": 1
+    },
+    {
+      "time": 5.376,
+      "lane": 0
+    },
+    {
+      "time": 6.037,
+      "lane": 0
+    },
+    {
+      "time": 6.711,
+      "lane": 1
+    },
+    {
+      "time": 7.373,
+      "lane": 1
+    },
+    {
+      "time": 8.046,
+      "lane": 0
+    },
+    {
+      "time": 8.708,
+      "lane": 0
+    },
+    {
+      "time": 9.404,
+      "lane": 1
+    },
+    {
+      "time": 10.705,
+      "lane": 0
+    },
+    {
+      "time": 11.378,
+      "lane": 0
+    },
+    {
+      "time": 12.04,
+      "lane": 1
+    },
+    {
+      "time": 12.713,
+      "lane": 1
+    },
+    {
+      "time": 13.375,
+      "lane": 0
+    },
+    {
+      "time": 14.037,
+      "lane": 0
+    },
+    {
+      "time": 14.71,
+      "lane": 1
+    },
+    {
+      "time": 16.034,
+      "lane": 0
+    },
+    {
+      "time": 16.707,
+      "lane": 0
+    },
+    {
+      "time": 17.369,
+      "lane": 1
+    },
+    {
+      "time": 18.042,
+      "lane": 1
+    },
+    {
+      "time": 18.704,
+      "lane": 0
+    },
+    {
+      "time": 19.377,
+      "lane": 0
+    },
+    {
+      "time": 20.039,
+      "lane": 1
+    },
+    {
+      "time": 21.374,
+      "lane": 0
+    },
+    {
+      "time": 22.048,
+      "lane": 0
+    },
+    {
+      "time": 22.709,
+      "lane": 1
+    },
+    {
+      "time": 23.371,
+      "lane": 1
+    },
+    {
+      "time": 24.044,
+      "lane": 0
+    },
+    {
+      "time": 24.706,
+      "lane": 0
+    },
+    {
+      "time": 25.368,
+      "lane": 1
+    },
+    {
+      "time": 26.703,
+      "lane": 0
+    },
+    {
+      "time": 27.376,
+      "lane": 0
+    },
+    {
+      "time": 28.038,
+      "lane": 1
+    },
+    {
+      "time": 28.712,
+      "lane": 1
+    },
+    {
+      "time": 29.373,
+      "lane": 0
+    },
+    {
+      "time": 30.047,
+      "lane": 0
+    },
+    {
+      "time": 30.732,
+      "lane": 1
+    }
+  ]
+}

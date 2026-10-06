@@ -1,0 +1,148 @@
+{
+  "schemaVersion": 1,
+  "type": "neon-lanes-track",
+  "day": 2,
+  "title": "Wheels on the Bus",
+  "audioFile": "track.mp3",
+  "duration": 35.861,
+  "bpm": 108,
+  "travelBeats": 4,
+  "notes": [
+    {
+      "time": 0.785,
+      "lane": 1
+    },
+    {
+      "time": 1.882,
+      "lane": 1
+    },
+    {
+      "time": 3.026,
+      "lane": 0
+    },
+    {
+      "time": 3.6,
+      "lane": 1
+    },
+    {
+      "time": 4.14,
+      "lane": 0
+    },
+    {
+      "time": 5.232,
+      "lane": 0
+    },
+    {
+      "time": 6.34,
+      "lane": 1
+    },
+    {
+      "time": 7.478,
+      "lane": 0
+    },
+    {
+      "time": 8.581,
+      "lane": 0
+    },
+    {
+      "time": 9.707,
+      "lane": 1
+    },
+    {
+      "time": 10.781,
+      "lane": 0
+    },
+    {
+      "time": 11.89,
+      "lane": 0
+    },
+    {
+      "time": 13.016,
+      "lane": 0
+    },
+    {
+      "time": 14.142,
+      "lane": 0
+    },
+    {
+      "time": 15.239,
+      "lane": 1
+    },
+    {
+      "time": 16.337,
+      "lane": 0
+    },
+    {
+      "time": 17.463,
+      "lane": 0
+    },
+    {
+      "time": 18.571,
+      "lane": 0
+    },
+    {
+      "time": 19.698,
+      "lane": 1
+    },
+    {
+      "time": 20.806,
+      "lane": 0
+    },
+    {
+      "time": 21.387,
+      "lane": 1
+    },
+    {
+      "time": 21.921,
+      "lane": 0
+    },
+    {
+      "time": 23.006,
+      "lane": 0
+    },
+    {
+      "time": 24.15,
+      "lane": 1
+    },
+    {
+      "time": 25.259,
+      "lane": 0
+    },
+    {
+      "time": 26.368,
+      "lane": 0
+    },
+    {
+      "time": 27.494,
+      "lane": 0
+    },
+    {
+      "time": 28.562,
+      "lane": 0
+    },
+    {
+      "time": 29.705,
+      "lane": 1
+    },
+    {
+      "time": 30.803,
+      "lane": 0
+    },
+    {
+      "time": 31.917,
+      "lane": 1
+    },
+    {
+      "time": 32.997,
+      "lane": 1
+    },
+    {
+      "time": 34.146,
+      "lane": 0
+    },
+    {
+      "time": 35.272,
+      "lane": 0
+    }
+  ]
+}

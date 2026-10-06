@@ -1,0 +1,232 @@
+{
+  "schemaVersion": 1,
+  "type": "neon-lanes-track",
+  "day": 4,
+  "title": "Clap Your Hands",
+  "audioFile": "track.mp3",
+  "duration": 35.661,
+  "bpm": 107,
+  "travelBeats": 4,
+  "notes": [
+    {
+      "time": 0.222,
+      "lane": 1
+    },
+    {
+      "time": 0.988,
+      "lane": 1
+    },
+    {
+      "time": 1.331,
+      "lane": 1
+    },
+    {
+      "time": 2.12,
+      "lane": 1
+    },
+    {
+      "time": 2.486,
+      "lane": 0
+    },
+    {
+      "time": 3.252,
+      "lane": 0
+    },
+    {
+      "time": 3.618,
+      "lane": 0
+    },
+    {
+      "time": 4.384,
+      "lane": 1
+    },
+    {
+      "time": 4.732,
+      "lane": 0
+    },
+    {
+      "time": 5.487,
+      "lane": 1
+    },
+    {
+      "time": 5.864,
+      "lane": 1
+    },
+    {
+      "time": 6.979,
+      "lane": 0
+    },
+    {
+      "time": 8.117,
+      "lane": 0
+    },
+    {
+      "time": 9.22,
+      "lane": 0
+    },
+    {
+      "time": 9.98,
+      "lane": 0
+    },
+    {
+      "time": 10.381,
+      "lane": 0
+    },
+    {
+      "time": 11.135,
+      "lane": 1
+    },
+    {
+      "time": 11.495,
+      "lane": 0
+    },
+    {
+      "time": 12.232,
+      "lane": 0
+    },
+    {
+      "time": 12.621,
+      "lane": 0
+    },
+    {
+      "time": 13.37,
+      "lane": 1
+    },
+    {
+      "time": 13.748,
+      "lane": 0
+    },
+    {
+      "time": 14.496,
+      "lane": 1
+    },
+    {
+      "time": 14.874,
+      "lane": 1
+    },
+    {
+      "time": 15.982,
+      "lane": 0
+    },
+    {
+      "time": 17.103,
+      "lane": 0
+    },
+    {
+      "time": 18.2,
+      "lane": 0
+    },
+    {
+      "time": 19.013,
+      "lane": 1
+    },
+    {
+      "time": 19.355,
+      "lane": 1
+    },
+    {
+      "time": 20.133,
+      "lane": 1
+    },
+    {
+      "time": 20.487,
+      "lane": 0
+    },
+    {
+      "time": 21.259,
+      "lane": 1
+    },
+    {
+      "time": 21.625,
+      "lane": 0
+    },
+    {
+      "time": 22.362,
+      "lane": 0
+    },
+    {
+      "time": 22.716,
+      "lane": 0
+    },
+    {
+      "time": 23.512,
+      "lane": 1
+    },
+    {
+      "time": 23.871,
+      "lane": 1
+    },
+    {
+      "time": 24.614,
+      "lane": 1
+    },
+    {
+      "time": 25.003,
+      "lane": 0
+    },
+    {
+      "time": 25.752,
+      "lane": 1
+    },
+    {
+      "time": 26.101,
+      "lane": 0
+    },
+    {
+      "time": 26.878,
+      "lane": 1
+    },
+    {
+      "time": 27.238,
+      "lane": 0
+    },
+    {
+      "time": 28.005,
+      "lane": 1
+    },
+    {
+      "time": 28.37,
+      "lane": 1
+    },
+    {
+      "time": 29.119,
+      "lane": 1
+    },
+    {
+      "time": 29.502,
+      "lane": 1
+    },
+    {
+      "time": 30.257,
+      "lane": 1
+    },
+    {
+      "time": 30.634,
+      "lane": 0
+    },
+    {
+      "time": 31.371,
+      "lane": 1
+    },
+    {
+      "time": 31.743,
+      "lane": 0
+    },
+    {
+      "time": 32.48,
+      "lane": 1
+    },
+    {
+      "time": 32.881,
+      "lane": 0
+    },
+    {
+      "time": 34.001,
+      "lane": 0
+    },
+    {
+      "time": 35.127,
+      "lane": 0
+    }
+  ]
+}
