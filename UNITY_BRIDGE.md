@@ -19,6 +19,7 @@ JS -> Unity raw messages through `Unity.call(...)`:
 - `tutorial_complete`
 - `track_complete:X` where X is 1..7
 - `event_complete` after all seven days are completed sequentially and day 7 finishes
+- `close` when the top-right menu close button is pressed
 
 Runtime API (optional fallback after page load):
 

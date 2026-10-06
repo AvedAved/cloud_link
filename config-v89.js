@@ -1,5 +1,5 @@
 window.NEON_LANES_CONFIG = {
-  buildName: "Neon Lanes Kids Web v7.0.16 Unity Player Name",
+  buildName: "Neon Lanes Kids Web v7.0.17 Unity Close Button",
   text: {
     pageTitle: "Ритм с Дино",
     eyebrow: "Музыкальная игра",

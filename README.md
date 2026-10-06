@@ -1,3 +1,9 @@
+# v7.0.17 — Unity close button
+
+- Added a small square close button in the top-right of the main menu.
+- Pressing it sends the raw Unity message `close` through the existing bridge.
+- The button is absolutely positioned and does not participate in menu/tutorial layout.
+
 # v7.0.16 — Unity player name
 
 - Added `playerName` URL/bootstrap parameter.

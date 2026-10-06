@@ -3717,6 +3717,7 @@ function closeSettings(){
 bindById("playBtn","click",()=>{startGame();});
 bindById("settingsBtn","click",openSettings);
 bindById("languageBtn","click",cycleLanguage);
+bindById("unityCloseBtn","click",()=>{ HostBridge.sendUnityMessage("close"); });
 bindById("fullscreenBtn","click",toggleGameFullscreen);
 bindById("resetCampaignProgressBtn","click",()=>{
   resetCampaignProgress().catch(error=>{
