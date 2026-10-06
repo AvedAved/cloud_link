@@ -1,0 +1,2523 @@
+:root{
+    --bg0:#0b9eea;
+    --bg1:#35c4ff;
+    --ink:#173f7b;
+    --muted:#6b87b7;
+    --panel:rgba(255,255,255,.94);
+    --stroke:rgba(99,161,220,.30);
+    --red:#ff5b8d;
+    --amber:#ffc928;
+    --green:#78d83e;
+    --blue:#27b9ff;
+    --font:"Nunito",system-ui,-apple-system,"Segoe UI",sans-serif;
+  }
+  *{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+  html,body{height:100%;margin:0}
+  body{
+    font-family:var(--font);color:var(--ink);
+    background:linear-gradient(180deg,#b8ebff 0%,#eaf9ff 100%);
+    display:flex;align-items:center;justify-content:center;min-height:100%;
+    overflow:hidden;user-select:none;-webkit-user-select:none;touch-action:none;
+  }
+  #device{
+    position:relative;width:100%;height:100%;max-width:440px;max-height:940px;
+    aspect-ratio:9/19.5;overflow:hidden;
+    background:linear-gradient(180deg,#23b8ff 0%,#109fe9 42%,#086ccc 100%);
+  }
+  #device::before,#device::after{
+    content:"";position:absolute;z-index:1;pointer-events:none;width:170px;height:92px;
+    background:radial-gradient(ellipse at center,#fff 0 42%,rgba(255,255,255,.92) 43% 58%,transparent 59%);
+    filter:drop-shadow(0 8px 10px rgba(59,143,205,.18));opacity:.9;
+  }
+  #device::before{left:-78px;top:125px}#device::after{right:-82px;top:190px}
+  @media(min-width:480px){#device{border-radius:34px;box-shadow:0 0 0 4px #fff,0 24px 70px rgba(34,105,165,.36)}}
+  canvas{position:absolute;inset:0;width:100%;height:100%;display:block;z-index:2}
+  #hud{position:absolute;inset:0;pointer-events:none;z-index:5}
+  #lives,#scoreWrap{
+    top:14px;background:linear-gradient(180deg,#fff,#eaf7ff);border:3px solid rgba(255,255,255,.95);
+    border-radius:22px;box-shadow:0 5px 0 rgba(28,107,190,.20),0 8px 18px rgba(18,99,172,.22);
+    padding:8px 13px;
+  }
+  #lives{position:absolute;left:14px;font-size:22px;letter-spacing:2px;color:#ff5588}
+  #lives .heart{transition:transform .2s,opacity .2s;display:inline-block;filter:drop-shadow(0 2px 0 #fff)}
+  #lives .heart.gone{opacity:.22;transform:scale(.72)}
+  #scoreWrap{position:absolute;right:14px;text-align:right;min-width:112px}
+  #score{font-size:28px;font-weight:900;line-height:1;color:#194b8e;text-shadow:none}
+  #scoreWrap .lbl{font-size:10px;color:var(--muted);letter-spacing:1.5px;text-transform:uppercase;font-weight:800}
+  #diffTag{position:absolute;top:75px;right:20px;font-size:11px;font-weight:900;color:#fff;text-shadow:0 2px 4px rgba(15,79,150,.4)}
+  .overlay{
+    position:absolute;inset:0;z-index:10;display:flex;flex-direction:column;align-items:center;
+    padding:28px 22px 22px;background:linear-gradient(180deg,rgba(36,185,255,.90),rgba(8,112,210,.96));
+    overflow:hidden;
+  }
+  .overlay::before,.overlay::after{content:"♪";position:absolute;color:rgba(255,255,255,.40);font-size:46px;font-weight:900;transform:rotate(-12deg)}
+  .overlay::before{left:28px;top:160px}.overlay::after{right:28px;top:220px;transform:rotate(12deg)}
+  .overlay.hidden{display:none}
+  .title{text-align:center;margin-top:2px;position:relative;z-index:2}
+  .title .eyebrow{font-size:12px;letter-spacing:2px;color:#e8f8ff;text-transform:uppercase;font-weight:900}
+  .title h1{
+    margin:2px 0 0;font-size:42px;font-weight:900;letter-spacing:.5px;line-height:1;
+    color:#ffb719;-webkit-text-stroke:2px #7e3300;text-shadow:0 4px 0 #fff,0 8px 12px rgba(38,91,150,.28);
+  }
+  .title .sub{font-size:11px;color:#fff;letter-spacing:.5px;margin-top:12px;font-weight:800}
+  .board{
+    width:100%;margin-top:20px;background:var(--panel);border:3px solid rgba(255,255,255,.95);
+    border-radius:22px;overflow:hidden;flex:1 1 auto;display:flex;flex-direction:column;
+    box-shadow:0 8px 0 rgba(27,103,185,.18),0 14px 30px rgba(20,91,165,.25);position:relative;z-index:2;
+  }
+  .board .bhead{display:flex;justify-content:space-between;align-items:center;padding:12px 16px;border-bottom:2px solid #dceeff;font-size:11px;letter-spacing:1.4px;color:#6482b4;text-transform:uppercase;font-weight:900}
+  .rows{overflow-y:auto;flex:1 1 auto;-webkit-overflow-scrolling:touch}
+  .row{display:grid;grid-template-columns:34px 1fr auto;align-items:center;gap:10px;padding:11px 16px;border-bottom:1px solid #e4f1fb;font-size:15px;font-weight:800}
+  .row:last-child{border-bottom:0}.row .rank{color:#7a94bd;font-weight:900}.row .pts{font-weight:900;color:#24528f}.row.top .rank{color:#ffb400}.row.me{background:#e8f7ff;box-shadow:inset 5px 0 0 var(--blue)}.row.me .nm{color:#1698d4;font-weight:900}
+  .divider{text-align:center;color:#86a0c5;font-size:14px;letter-spacing:6px;padding:6px 0}.empty{padding:26px 16px;text-align:center;color:#6b87b7;font-size:14px;line-height:1.5;font-weight:800}
+  .btn{
+    font-family:var(--font);cursor:pointer;border:3px solid #fff;border-radius:18px;padding:15px 22px;
+    font-size:18px;font-weight:900;letter-spacing:.6px;text-transform:none;color:#174f2c;
+    background:linear-gradient(180deg,#b8f36d,#69cf39);box-shadow:0 7px 0 #319c29,0 12px 25px rgba(30,100,70,.24),inset 0 2px 0 rgba(255,255,255,.65);
+    transition:transform .08s ease,filter .15s;width:100%;margin-top:16px;position:relative;z-index:2;
+  }
+  .btn:hover{filter:brightness(1.04)}.btn:active{transform:translateY(4px);box-shadow:0 3px 0 #319c29,0 7px 16px rgba(30,100,70,.2)}
+  .btn.ghost{background:linear-gradient(180deg,#fff,#dff2ff);color:#24528f;border:3px solid #fff;box-shadow:0 6px 0 #92c9ef;font-size:14px;padding:13px 18px}
+  .btn:focus-visible{outline:3px solid #fff;outline-offset:3px}.hint{font-size:12px;color:#fff;margin-top:16px;text-align:center;line-height:1.55;font-weight:800;text-shadow:0 2px 4px rgba(15,79,150,.4);position:relative;z-index:2}
+  .go-head{text-align:center;position:relative;z-index:2}.go-head .verdict{font-size:13px;letter-spacing:2px;color:#fff;text-transform:uppercase;font-weight:900}.go-head .final{font-size:52px;font-weight:900;line-height:1;margin-top:4px;color:#fff;text-shadow:0 5px 0 rgba(37,91,160,.35)}.go-head .final .u{font-size:15px;color:#dff5ff;letter-spacing:1px;margin-left:6px}.go-head .place{font-size:12px;color:#fff;margin-top:8px;font-weight:800}
+  .nameEntry{width:100%;margin-top:16px;display:flex;gap:10px;position:relative;z-index:2}.nameEntry input{flex:1;font-family:var(--font);font-size:16px;color:#234a83;background:#fff;border:3px solid #fff;border-radius:16px;padding:13px 14px;font-weight:800;box-shadow:0 6px 0 rgba(42,112,190,.20)}.nameEntry input:focus{outline:none;box-shadow:0 0 0 4px rgba(255,255,255,.35),0 6px 0 rgba(42,112,190,.20)}.nameEntry .save{width:auto;margin:0;padding:0 18px;font-size:13px}.row2{display:flex;gap:12px;width:100%;position:relative;z-index:2}.row2 .btn{margin-top:0}
+  .fadeIn{animation:fade .3s ease both}@keyframes fade{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:none}}@media(prefers-reduced-motion:reduce){.fadeIn{animation:none}.btn{transition:none}}
+
+  .menu-actions{display:flex;gap:10px;width:100%;position:relative;z-index:2}
+  .menu-actions .btn{margin-top:16px}
+  .menu-actions .btn.settings-open{flex:0 0 64px;padding:13px 8px;font-size:24px;background:linear-gradient(180deg,#fff,#dff2ff);color:#24528f;box-shadow:0 6px 0 #92c9ef}
+  #settings{padding:18px 16px;background:linear-gradient(180deg,rgba(36,185,255,.98),rgba(8,112,210,.99));overflow-y:auto;align-items:stretch}
+  .settings-card{background:rgba(255,255,255,.96);border:3px solid #fff;border-radius:22px;padding:16px;box-shadow:0 8px 0 rgba(27,103,185,.18);color:#234a83}
+  .settings-title{font-size:24px;font-weight:900;text-align:center;margin:0 0 4px}
+  .settings-sub{font-size:12px;font-weight:800;text-align:center;color:#6b87b7;margin-bottom:14px}
+  .settings-section{border-top:2px solid #dceeff;padding-top:13px;margin-top:13px}
+  .settings-section:first-of-type{border-top:0;margin-top:0;padding-top:0}
+  .settings-section h3{font-size:15px;margin:0 0 9px;font-weight:900;color:#194b8e}
+  .settings-grid{display:grid;grid-template-columns:minmax(0,1fr) 88px 88px;gap:7px;align-items:center}
+  .settings-grid .head{font-size:10px;text-transform:uppercase;color:#7895bc;text-align:center;font-weight:900}
+  .settings-grid label{font-size:12px;font-weight:800;line-height:1.15}
+  .settings-grid input{width:100%;min-width:0;border:2px solid #cde6f8;border-radius:10px;padding:8px 6px;font:800 13px var(--font);color:#234a83;background:#f7fcff;text-align:center}
+  .settings-grid input:focus{outline:none;border-color:#27b9ff;box-shadow:0 0 0 3px rgba(39,185,255,.16)}
+  .settings-note{font-size:10px;color:#7895bc;font-weight:700;line-height:1.35;margin-top:8px}
+  .settings-buttons{display:flex;gap:10px;margin-top:14px}
+  .settings-buttons .btn{margin:0;padding:12px 10px;font-size:14px}
+  .settings-buttons .danger{background:linear-gradient(180deg,#ffd4df,#ff8daa);color:#87334d;box-shadow:0 6px 0 #dd6281}
+
+/* WebView / Telegram safe-area support */
+body {
+  padding:
+    var(--app-safe-top, env(safe-area-inset-top, 0px))
+    var(--app-safe-right, env(safe-area-inset-right, 0px))
+    var(--app-safe-bottom, env(safe-area-inset-bottom, 0px))
+    var(--app-safe-left, env(safe-area-inset-left, 0px));
+}
+#device {
+  height: min(100%, var(--app-viewport-height, 100vh));
+}
+
+  .settings-file-actions{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:15px}
+  .settings-file-actions .btn{margin:0;padding:11px;font-size:14px}
+  .modal-overlay{background:rgba(20,55,100,.42)}
+  .modal-card{width:min(92%,520px)}
+
+  .modal-form>label{font-size:12px;font-weight:900;color:#194b8e}
+
+  .form-error{padding:9px 10px;border-radius:10px;background:#ffe3e8;color:#9b2948;font-size:12px;font-weight:800;line-height:1.35}
+  @media(max-width:520px){
+
+    .settings-grid{grid-template-columns:minmax(0,1fr) 74px 74px}
+  }
+
+
+.track-settings-card{width:min(92%,560px)}
+.track-info{padding:13px 15px;border-radius:14px;background:#eef9ff;border:2px solid #cceaff;margin:12px 0}
+.track-info-label{font-size:11px;font-weight:900;text-transform:uppercase;color:#5d7fa8}
+.track-info-name{font-size:18px;font-weight:1000;color:#184d91;margin-top:3px}
+.track-info-meta{font-size:12px;font-weight:700;color:#6682a3;margin-top:4px}
+.track-upload-grid{display:grid;grid-template-columns:minmax(120px,.8fr) minmax(150px,1fr);gap:8px 10px;align-items:center}
+.track-upload-grid label{font-size:12px;font-weight:900;color:#194b8e}
+.track-upload-grid .btn{margin:0;padding:10px 12px;font-size:12px}
+.selected-file{grid-column:2;font-size:11px;font-weight:700;color:#6c84a2;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+@media(max-width:520px){.track-upload-grid{grid-template-columns:1fr}.selected-file{grid-column:1}}
+
+#trackLoadError.hidden{display:none!important}
+#trackLoadError:not(.hidden){display:block}
+.key-bindings-grid{
+  display:grid;
+  grid-template-columns:minmax(100px,1fr) 86px;
+  gap:9px 12px;
+  align-items:center;
+}
+.key-bindings-grid span{
+  font-size:13px;
+  font-weight:900;
+  color:#194b8e;
+}
+.key-bind-btn{
+  min-height:42px;
+  border:2px solid #b8dcff;
+  border-radius:12px;
+  background:#fff;
+  color:#174d91;
+  font:1000 15px "Nunito",sans-serif;
+  cursor:pointer;
+}
+.key-bind-btn.listening{
+  border-color:#ff9bc5;
+  background:#fff1f7;
+  color:#b8326f;
+}
+.key-bind-hint{
+  margin-top:9px;
+  font-size:11px;
+  font-weight:700;
+  color:#7189a7;
+}
+
+.track-select{
+  width:100%;
+  margin-top:6px;
+  padding:10px 38px 10px 12px;
+  border:2px solid #b8dcff;
+  border-radius:12px;
+  background:#fff;
+  color:#184d91;
+  font:1000 16px "Nunito",sans-serif;
+  cursor:pointer;
+}
+.track-select:focus{
+  outline:none;
+  border-color:#75bfff;
+  box-shadow:0 0 0 3px rgba(117,191,255,.18);
+}
+
+.track-select-row{
+  display:grid;
+  grid-template-columns:minmax(0,1fr) 48px;
+  gap:9px;
+  align-items:center;
+  margin-top:6px;
+}
+.track-select-row .track-select{margin-top:0}
+.track-add-btn{
+  width:48px;
+  height:48px;
+  border:2px solid #b8dcff;
+  border-radius:13px;
+  background:#fff;
+  color:#184d91;
+  font:1000 27px/1 "Nunito",sans-serif;
+  cursor:pointer;
+}
+.track-add-btn:hover{background:#eef8ff}
+.track-upload-card{width:min(92%,520px)}
+#trackUploadError.hidden{display:none!important}
+
+.countdown-overlay{
+  position:fixed;
+  inset:0;
+  z-index:80;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  background:rgba(21,56,118,.18);
+  pointer-events:none;
+}
+.countdown-overlay.hidden{display:none!important}
+.countdown-value{
+  width:min(34vw,180px);
+  aspect-ratio:1;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  border-radius:50%;
+  background:rgba(255,255,255,.94);
+  box-shadow:0 18px 48px rgba(24,77,145,.28);
+  color:#184d91;
+  font:1000 clamp(72px,14vw,150px)/1 "Nunito",sans-serif;
+  animation:countdown-pop .72s ease both;
+}
+@keyframes countdown-pop{
+  0%{transform:scale(.55);opacity:0}
+  35%{transform:scale(1.08);opacity:1}
+  100%{transform:scale(.92);opacity:1}
+}
+
+.leaderboard-track{
+  display:flex;
+  align-items:flex-start;
+  justify-content:space-between;
+  gap:12px;
+  padding:10px 12px 8px;
+  border-bottom:1px solid rgba(24,77,145,.12);
+}
+.leaderboard-track-name{
+  color:#184d91;
+  font:1000 15px/1.2 "Nunito",sans-serif;
+}
+.leaderboard-track-max{
+  color:#6684a8;
+  font:800 12px/1.2 "Nunito",sans-serif;
+  text-align:right;
+}
+
+.board .row .pts{
+  min-width:76px;
+  text-align:right;
+  white-space:nowrap;
+  font-variant-numeric:tabular-nums;
+}
+
+.nameEntry{
+  display:block;
+}
+.nameEntry input{
+  width:100%;
+}
+
+
+/* ---------- iOS-safe mobile browser mode ---------- */
+html,
+body{
+  margin:0;
+  width:100%;
+  height:100%;
+  overflow:hidden;
+  overscroll-behavior:none;
+  background:#086ccc;
+}
+
+body.mobile-browser{
+  position:relative;
+  width:100%;
+  height:var(--mobile-vh, 100vh);
+  min-height:var(--mobile-vh, 100vh);
+  overflow:hidden;
+}
+
+body.mobile-browser #device{
+  position:absolute;
+  left:0;
+  top:0;
+  width:var(--mobile-vw, 100vw);
+  height:var(--mobile-vh, 100vh);
+  max-width:none;
+  max-height:none;
+  aspect-ratio:auto;
+  border-radius:0;
+  box-shadow:none;
+  overflow:hidden;
+}
+
+body.mobile-browser canvas{
+  position:absolute;
+  inset:0;
+  width:100%;
+  height:100%;
+  display:block;
+}
+
+body.mobile-browser .overlay{
+  box-sizing:border-box;
+  width:100%;
+  height:100%;
+  overflow:hidden;
+  padding-top:max(28px, env(safe-area-inset-top));
+  padding-right:max(22px, env(safe-area-inset-right));
+  padding-bottom:max(22px, env(safe-area-inset-bottom));
+  padding-left:max(22px, env(safe-area-inset-left));
+}
+
+body.mobile-browser #game{
+  touch-action:none;
+}
+
+body.mobile-browser button,
+body.mobile-browser input,
+body.mobile-browser select{
+  position:relative;
+  touch-action:manipulation;
+  -webkit-tap-highlight-color:transparent;
+}
+
+.fullscreen-btn{
+  position:fixed;
+  right:max(12px, env(safe-area-inset-right));
+  bottom:max(12px, env(safe-area-inset-bottom));
+  top:auto;
+  z-index:9999;
+  width:42px;
+  height:42px;
+  padding:0;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  border:2px solid rgba(255,255,255,.96);
+  border-radius:13px;
+  background:rgba(14,94,176,.92);
+  color:#fff;
+  box-shadow:0 5px 16px rgba(0,42,100,.34);
+  font:900 23px/1 sans-serif;
+  cursor:pointer;
+  pointer-events:auto;
+}
+
+.fullscreen-btn:active{
+  transform:scale(.94);
+}
+
+body.expanded-mobile{
+  height:100vh;
+  min-height:100vh;
+}
+
+.settings-buttons-single{
+  grid-template-columns:minmax(150px, 220px);
+  justify-content:center;
+}
+
+/* ---------- Neon Lanes Kids Web v3.4 UI ---------- */
+.menu-title-sprite-wrap{
+  width:min(100%, 400px);
+  height:clamp(150px, 25vh, 230px);
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  margin:0 auto 4px;
+  flex:0 0 auto;
+}
+.menu-title-sprite{
+  width:100%;
+  height:100%;
+  object-fit:contain;
+  display:block;
+}
+
+#menu{
+  padding-top:max(12px, env(safe-area-inset-top));
+  gap:8px;
+}
+#menu .board{
+  max-height:clamp(245px, 36vh, 330px);
+  flex:0 1 auto;
+}
+#menu .rows{
+  max-height:clamp(165px, 25vh, 235px);
+  overflow:hidden;
+}
+#menu .row{
+  min-height:27px;
+  padding:4px 10px;
+  font-size:12px;
+}
+#menu .leaderboard-track{
+  padding:7px 10px 6px;
+}
+#menu .bhead{
+  padding:6px 10px;
+}
+#menu .menu-actions{
+  margin-top:2px;
+}
+#menu .hint{
+  display:none !important;
+}
+
+#settings{
+  align-items:center;
+  justify-content:center;
+  padding:18px;
+}
+#settings .track-settings-card{
+  width:min(100%, 390px);
+  margin:auto;
+}
+
+.gameover-board{
+  max-height:clamp(220px, 31vh, 285px);
+  overflow:hidden;
+}
+.gameover-board .rows{
+  max-height:clamp(135px, 19vh, 190px);
+  overflow:hidden;
+}
+#gameover{
+  padding-top:max(16px, env(safe-area-inset-top));
+  padding-bottom:max(14px, env(safe-area-inset-bottom));
+  gap:7px;
+}
+#gameover .go-head{
+  margin-bottom:0;
+}
+#gameover .row{
+  min-height:25px;
+  padding:3px 9px;
+  font-size:12px;
+}
+#gameover .leaderboard-track{
+  padding:6px 9px 5px;
+}
+#gameover .bhead{
+  padding:5px 9px;
+}
+#gameover .row2{
+  margin-top:6px;
+  gap:9px;
+}
+#gameover .row2 .btn{
+  min-height:44px;
+  padding:10px 8px;
+  font-size:13px;
+}
+.btn.soft-danger{
+  background:linear-gradient(180deg,#ffb8c6,#f17b93);
+  color:#7c2940;
+  box-shadow:0 6px 0 #c95872;
+  border:2px solid rgba(255,255,255,.88);
+}
+.btn.soft-danger:active{
+  box-shadow:0 2px 0 #c95872;
+}
+
+/* ---------- Neon Lanes Kids Web v3.5 tweaks ---------- */
+#settings{
+  align-items:center;
+  justify-content:flex-start;
+  padding:max(18px, env(safe-area-inset-top)) 18px 18px;
+}
+#settings .track-settings-card{
+  width:min(100%, 390px);
+  margin:0 auto;
+}
+
+#diffTag{
+  display:none !important;
+}
+
+
+/* ---------- Neon Lanes Kids Web v3.7 tweaks ---------- */
+#settings{
+  align-items:center;
+  justify-content:flex-start;
+  padding:max(16px, env(safe-area-inset-top)) 18px 18px;
+  overflow-y:auto;
+}
+#settings .track-settings-card{
+  margin:0 auto;
+}
+
+#menu{
+  justify-content:flex-start;
+  gap:6px;
+  padding-top:max(10px, env(safe-area-inset-top));
+  overflow-y:auto;
+}
+.menu-title-sprite-wrap{
+  margin:0 auto 0;
+}
+#menu .board{
+  flex:0 0 auto;
+  max-height:none;
+  margin-top:0;
+}
+#menu .rows{
+  max-height:none;
+  overflow:visible;
+}
+#menu .menu-actions{
+  margin-top:2px;
+  flex:0 0 auto;
+}
+#menu .leaderboard-track,
+#menu .bhead{
+  flex:0 0 auto;
+}
+
+.toggle-settings-section{
+  margin-top:10px;
+}
+.toggle-row{
+  display:grid;
+  grid-template-columns:minmax(0,1fr) auto;
+  align-items:center;
+  gap:12px;
+  font-size:13px;
+  font-weight:900;
+  color:#1a4a88;
+}
+.toggle-row input{
+  position:absolute;
+  opacity:0;
+  pointer-events:none;
+}
+.toggle-ui{
+  width:54px;
+  height:31px;
+  border-radius:999px;
+  background:#d8e9f8;
+  border:2px solid #c2dbf0;
+  box-shadow:inset 0 2px 5px rgba(0,0,0,.08);
+  position:relative;
+  transition:.18s ease;
+}
+.toggle-ui::after{
+  content:"";
+  position:absolute;
+  width:23px;
+  height:23px;
+  left:3px;
+  top:2px;
+  border-radius:50%;
+  background:#fff;
+  box-shadow:0 2px 6px rgba(0,0,0,.16);
+  transition:.18s ease;
+}
+.toggle-row input:checked + .toggle-ui{
+  background:#7bc9ff;
+  border-color:#59afe8;
+}
+.toggle-row input:checked + .toggle-ui::after{
+  left:26px;
+}
+.toggle-row input:focus-visible + .toggle-ui{
+  outline:3px solid rgba(87,170,239,.35);
+  outline-offset:2px;
+}
+
+
+/* ---------- Neon Lanes Kids Web v4.0 ---------- */
+.track-folder-picker{
+  display:grid;
+  gap:10px;
+}
+.track-folder-picker .btn{
+  margin:0;
+}
+.track-folder-picker .selected-file{
+  grid-column:auto;
+  white-space:normal;
+  text-align:center;
+}
+.folder-help{
+  font-size:11px;
+  line-height:1.45;
+  font-weight:700;
+  color:#6f87a6;
+  text-align:center;
+}
+
+
+/* ---------- Neon Lanes Kids Web v4.1 ---------- */
+.track-select-row{
+  grid-template-columns:minmax(0,1fr) auto auto;
+}
+.track-delete-btn{
+  background:linear-gradient(180deg,#ffbeca,#ef8096);
+  color:#7a2940;
+  box-shadow:0 4px 0 #c85b73;
+}
+.track-delete-btn:active{
+  box-shadow:0 1px 0 #c85b73;
+}
+
+/* ---------- Neon Lanes Kids Web v3.5 BPM ---------- */
+.track-delete-btn.hidden,
+.track-delete-btn:disabled{
+  display:none !important;
+}
+
+
+#topBar{position:absolute;left:14px;right:14px;top:12px;display:flex;gap:10px;align-items:stretch;pointer-events:none}
+.hud-pill{background:linear-gradient(180deg,#fff7e7,#fff);border:3px solid rgba(255,255,255,.95);border-radius:22px;box-shadow:0 6px 0 rgba(120,72,14,.16),0 10px 18px rgba(23,80,140,.18);padding:10px 12px;display:flex;flex-direction:column;justify-content:center;min-height:68px}
+.hud-track{flex:1.1}
+.hud-score,.hud-lives{flex:0 0 110px}
+.hud-label{font:900 10px/1.1 var(--font);text-transform:uppercase;letter-spacing:1px;color:#6a6d99;margin-bottom:4px}
+.hud-value{font:1000 18px/1.15 var(--font);color:#2f2c77;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+#score{font:1000 33px/1 var(--font);color:#2a4ea4;text-align:left}
+#lives{font:1000 24px/1 var(--font);letter-spacing:2px;color:#ff5b85}
+#trackProgressWrap{width:100%;height:12px;border-radius:999px;background:rgba(46,80,164,.14);overflow:hidden;border:2px solid rgba(255,255,255,.8);margin-top:8px}
+#trackProgressFill{height:100%;width:0%;background:linear-gradient(90deg,#53c3ff,#ffe94b)}
+#diffTag{display:none!important}
+#lives .heart{filter:none}
+.menu-title-sprite-wrap{width:100%;display:flex;justify-content:center;margin-top:-4px;margin-bottom:10px}
+.menu-title-sprite{width:min(100%,390px);height:auto;display:block;filter:drop-shadow(0 10px 14px rgba(23,62,121,.26))}
+.board{margin-top:12px}
+@media(max-width:520px){.hud-score,.hud-lives{flex:0 0 96px}.hud-value{font-size:15px}#score{font-size:28px}#topBar{gap:8px;top:10px;left:10px;right:10px}.hud-pill{padding:9px 10px;min-height:62px}}
+
+
+/* ---------- Neon Lanes Kids Web v4.2.4 ---------- */
+/* The legacy HUD used #lives as an independently positioned card.
+   In the redesigned HUD it must remain inside .hud-lives. */
+#topBar .hud-lives{
+  min-width:0;
+  overflow:hidden;
+}
+#topBar #lives{
+  position:static !important;
+  inset:auto !important;
+  top:auto !important;
+  left:auto !important;
+  right:auto !important;
+  width:auto !important;
+  min-width:0 !important;
+  margin:0 !important;
+  padding:0 !important;
+  background:none !important;
+  border:0 !important;
+  border-radius:0 !important;
+  box-shadow:none !important;
+  display:flex;
+  align-items:center;
+  flex-wrap:nowrap;
+  gap:1px;
+  font:1000 20px/1 var(--font);
+  letter-spacing:0;
+  white-space:nowrap;
+  color:#ff5b85;
+}
+#topBar #lives .heart{
+  flex:0 0 auto;
+  display:inline-block;
+  filter:none;
+}
+#topBar #lives .heart.gone{
+  opacity:.22;
+  transform:scale(.72);
+}
+@media(max-width:520px){
+  #topBar{gap:6px;left:8px;right:8px;}
+  .hud-track{min-width:0;flex:1 1 auto;}
+  .hud-score{flex:0 0 72px;}
+  .hud-lives{flex:0 0 104px;}
+  #topBar #lives{font-size:18px;}
+}
+
+
+/* Compact horizontal HUD — v4.3.3 */
+#hud{
+  position:absolute;
+  inset:0;
+  pointer-events:none;
+  z-index:20;
+}
+
+#topBar{
+  position:absolute;
+  top:max(8px, env(safe-area-inset-top));
+  left:10px;
+  right:10px;
+
+  display:flex;
+  flex-direction:row;
+  align-items:stretch;
+  justify-content:center;
+  gap:8px;
+
+  height:auto;
+  min-height:0;
+  max-height:100px;
+  margin:0;
+  padding:0;
+}
+
+#topBar .hud-pill{
+  box-sizing:border-box;
+  display:flex;
+  flex-direction:column;
+  justify-content:center;
+
+  height:auto;
+  min-height:54px;
+  max-height:100px;
+  margin:0;
+  padding:7px 10px;
+
+  overflow:hidden;
+}
+
+#topBar .hud-track{
+  min-width:0;
+  flex:1 1 auto;
+}
+
+#topBar .hud-score{
+  min-width:78px;
+  flex:0 0 86px;
+}
+
+#topBar .hud-lives{
+  min-width:100px;
+  flex:0 0 112px;
+}
+
+#trackTitleDisplay{
+  display:block;
+  width:100%;
+  min-width:0;
+  max-width:100%;
+  overflow:hidden;
+  text-overflow:ellipsis;
+  white-space:nowrap;
+  line-height:1.1;
+}
+
+#topBar #trackProgressWrap{
+  flex:0 0 auto;
+  width:100%;
+  height:7px;
+  min-height:7px;
+  max-height:7px;
+  margin-top:5px;
+}
+
+#topBar #score{
+  line-height:1;
+}
+
+#topBar #lives{
+  display:flex;
+  align-items:center;
+  flex-wrap:nowrap;
+  gap:1px;
+  min-width:0;
+  white-space:nowrap;
+  line-height:1;
+}
+
+@media(max-width:520px){
+  #topBar{
+    top:max(6px, env(safe-area-inset-top));
+    left:5px;
+    right:5px;
+    gap:5px;
+    max-height:80px;
+  }
+
+  #topBar .hud-pill{
+    height:auto;
+    min-height:48px;
+    max-height:80px;
+    padding:5px 7px;
+    border-radius:16px;
+  }
+
+  #topBar .hud-score{
+    min-width:62px;
+    flex-basis:68px;
+  }
+
+  #topBar .hud-lives{
+    min-width:84px;
+    flex-basis:92px;
+  }
+
+  #topBar .hud-label{
+    margin-bottom:2px;
+    font-size:8px;
+  }
+
+  #trackTitleDisplay{
+    font-size:13px;
+  }
+
+  #topBar #score{
+    font-size:24px;
+  }
+
+  #topBar #lives{
+    font-size:16px;
+  }
+
+  #topBar #trackProgressWrap{
+    height:5px;
+    min-height:5px;
+    max-height:5px;
+    margin-top:3px;
+  }
+}
+
+
+/* HUD is visible only while the rhythm game is running. */
+#hud{
+  display:none;
+}
+
+body.gameplay-active #hud{
+  display:block;
+}
+
+
+/* v4.4.0: two-card HUD without lives. */
+#topBar{
+  display:flex;
+  flex-direction:row;
+  align-items:stretch;
+  gap:8px;
+}
+
+#topBar .hud-track{
+  min-width:0;
+  flex:1 1 auto;
+}
+
+#topBar .hud-score{
+  min-width:92px;
+  flex:0 0 108px;
+  margin-left:auto;
+}
+
+#trackProgressWrap{
+  width:100%;
+  height:14px !important;
+  min-height:14px !important;
+  max-height:14px !important;
+  margin-top:7px !important;
+  overflow:hidden;
+  border-radius:999px;
+  background:rgba(255,255,255,.34);
+  box-shadow:inset 0 0 0 2px rgba(255,255,255,.52);
+}
+
+#trackProgressFill{
+  width:100% !important;
+  height:100%;
+  transform:scaleX(0);
+  transform-origin:left center;
+  
+  border-radius:inherit;
+  background:linear-gradient(90deg,#ffe34f 0%,#ff9f2f 48%,#ff4f87 100%) !important;
+  box-shadow:0 0 12px rgba(255,116,72,.72);
+}
+
+@media(max-width:520px){
+  #topBar .hud-score{
+    min-width:74px;
+    flex-basis:82px;
+  }
+
+  #trackProgressWrap{
+    height:11px !important;
+    min-height:11px !important;
+    max-height:11px !important;
+    margin-top:5px !important;
+  }
+}
+
+
+/* ============================================================
+   v4.4.4 — authoritative HUD and phone-frame layout
+   ============================================================ */
+
+/* Three HUD cards in one row. No absolute child positioning. */
+#hud{
+  position:absolute;
+  inset:0;
+  z-index:20;
+  display:none;
+  pointer-events:none;
+}
+
+body.gameplay-active #hud{
+  display:block;
+}
+
+#topBar{
+  position:absolute;
+  top:max(8px, env(safe-area-inset-top));
+  left:10px;
+  right:10px;
+  z-index:21;
+
+  display:grid;
+  grid-template-columns:minmax(160px,1fr) 92px 132px;
+  align-items:stretch;
+  gap:8px;
+
+  width:auto;
+  height:72px;
+  min-height:72px;
+  max-height:72px;
+  margin:0;
+  padding:0;
+  box-sizing:border-box;
+  pointer-events:none;
+}
+
+#topBar .hud-pill{
+  position:relative;
+  box-sizing:border-box;
+  min-width:0;
+  width:auto;
+  height:72px;
+  min-height:72px;
+  max-height:72px;
+  margin:0;
+  padding:8px 12px;
+
+  display:flex;
+  flex-direction:column;
+  align-items:flex-start;
+  justify-content:center;
+
+  overflow:hidden;
+  pointer-events:none;
+}
+
+#topBar .hud-track{
+  min-width:0;
+}
+
+#trackTitleDisplay{
+  display:block;
+  width:100%;
+  min-width:0;
+  overflow:hidden;
+  text-overflow:ellipsis;
+  white-space:nowrap;
+  line-height:1.1;
+}
+
+#trackProgressWrap{
+  position:relative;
+  display:block;
+  box-sizing:border-box;
+  width:100%;
+  height:14px;
+  min-height:14px;
+  max-height:14px;
+  margin-top:7px;
+  overflow:hidden;
+  border-radius:999px;
+  background:rgba(255,255,255,.34);
+  box-shadow:inset 0 0 0 2px rgba(255,255,255,.55);
+}
+
+#trackProgressFill{
+  position:absolute;
+  inset:0;
+  display:block;
+  width:100%;
+  height:100%;
+  border-radius:inherit;
+  transform:scaleX(0);
+  transform-origin:left center;
+  
+  background:linear-gradient(90deg,#ffe34f 0%,#ff9f2f 48%,#ff4f87 100%);
+  box-shadow:0 0 12px rgba(255,116,72,.72);
+}
+
+#topBar .hud-score{
+  min-width:0;
+}
+
+#topBar .hud-exit{
+  min-width:0;
+  padding:8px 10px;
+  align-items:center;
+  justify-content:center;
+  text-align:center;
+  cursor:pointer;
+  pointer-events:auto;
+  border:3px solid rgba(255,255,255,.95);
+}
+
+#topBar .hud-exit-value{
+  display:block;
+  width:100%;
+  font:900 15px/1.12 "Nunito",sans-serif;
+  white-space:normal;
+  overflow-wrap:anywhere;
+}
+
+@media(max-width:620px){
+  #topBar{
+    top:max(6px, env(safe-area-inset-top));
+    left:5px;
+    right:5px;
+    grid-template-columns:minmax(0,1fr) 64px 92px;
+    gap:5px;
+    height:64px;
+    min-height:64px;
+    max-height:64px;
+  }
+
+  #topBar .hud-pill{
+    height:64px;
+    min-height:64px;
+    max-height:64px;
+    padding:6px 7px;
+    border-radius:15px;
+  }
+
+  #topBar .hud-label{
+    font-size:8px;
+    margin-bottom:2px;
+  }
+
+  #trackTitleDisplay{
+    font-size:12px;
+  }
+
+  #topBar #score{
+    font-size:23px;
+    line-height:1;
+  }
+
+  #trackProgressWrap{
+    height:10px;
+    min-height:10px;
+    max-height:10px;
+    margin-top:4px;
+  }
+
+  #topBar .hud-exit-value{
+    font-size:10px;
+    line-height:1.05;
+  }
+}
+
+/* Main menu, settings and results use the same centered phone-sized frame
+   as the game's visual area on desktop. */
+#menu,
+#settings,
+#gameover{
+  box-sizing:border-box;
+  align-items:center;
+  justify-content:center;
+  padding:
+    max(16px, env(safe-area-inset-top))
+    12px
+    max(16px, env(safe-area-inset-bottom));
+}
+
+#menu .menu-title-sprite-wrap,
+#menu .board,
+#menu .menu-actions,
+#settings .track-settings-card,
+#gameover .go-head,
+#gameover .nameEntry,
+#gameover .gameover-board,
+#gameover .row2{
+  box-sizing:border-box;
+  width:min(calc(100% - 24px), 430px);
+  max-width:430px;
+  flex:0 0 auto;
+  margin-left:auto;
+  margin-right:auto;
+}
+
+#menu .menu-title-sprite-wrap{
+  width:min(calc(100% - 40px), 360px);
+  max-width:360px;
+}
+
+#menu .board{
+  min-height:270px;
+  max-height:min(410px,48vh);
+  margin-top:12px;
+}
+
+#menu .rows{
+  min-height:0;
+  max-height:286px;
+  overflow-y:auto;
+}
+
+#menu .menu-actions{
+  margin-top:12px;
+}
+
+#menu .leaderboard-track-name{
+  font-size:18px;
+}
+
+#menu .leaderboard-track-max,
+#menu .bhead{
+  font-size:14px;
+}
+
+#menu .row{
+  grid-template-columns:38px minmax(0,1fr) auto;
+  min-height:40px;
+  padding:8px 13px;
+  font-size:16px;
+  line-height:1.2;
+}
+
+#menu .row .rank,
+#menu .row .nm,
+#menu .row .pts{
+  font-size:16px;
+}
+
+#settings .track-settings-card{
+  max-height:min(720px,calc(100vh - 32px));
+  overflow-y:auto;
+}
+
+#gameover{
+  gap:9px;
+}
+
+#gameover .gameover-board{
+  min-height:230px;
+  max-height:min(360px,42vh);
+}
+
+#gameover .gameover-board .rows{
+  min-height:0;
+  max-height:235px;
+  overflow-y:auto;
+}
+
+#gameover .row2{
+  margin-top:9px;
+}
+
+@media(max-width:520px){
+  #menu .menu-title-sprite-wrap,
+  #menu .board,
+  #menu .menu-actions,
+  #settings .track-settings-card,
+  #gameover .go-head,
+  #gameover .nameEntry,
+  #gameover .gameover-board,
+  #gameover .row2{
+    width:min(calc(100% - 12px), 430px);
+  }
+
+  #menu .board{
+    min-height:245px;
+    max-height:42vh;
+  }
+
+  #menu .rows{
+    max-height:250px;
+  }
+
+  #menu .row{
+    min-height:36px;
+    padding:7px 10px;
+    font-size:14px;
+  }
+
+  #menu .row .rank,
+  #menu .row .nm,
+  #menu .row .pts{
+    font-size:14px;
+  }
+
+  #settings .track-settings-card{
+    max-height:calc(var(--mobile-vh,100vh) - 24px);
+  }
+}
+
+
+/* v4.4.5 — corrected sibling structure for all three HUD cards. */
+#topBar{
+  display:grid !important;
+  grid-template-columns:minmax(0,1fr) 92px 132px !important;
+  align-items:stretch !important;
+  gap:8px !important;
+}
+
+#topBar > .hud-pill{
+  position:relative !important;
+  grid-row:1 !important;
+  min-width:0 !important;
+  width:auto !important;
+  margin:0 !important;
+  box-sizing:border-box !important;
+}
+
+#topBar > .hud-track{
+  grid-column:1 !important;
+}
+
+#topBar > .hud-score{
+  grid-column:2 !important;
+}
+
+#topBar > .hud-exit{
+  grid-column:3 !important;
+  display:flex !important;
+  align-items:center !important;
+  justify-content:center !important;
+}
+
+@media(max-width:620px){
+  #topBar{
+    grid-template-columns:minmax(0,1fr) 64px 92px !important;
+    gap:5px !important;
+  }
+}
+
+
+/* v4.4.6 — track title and progress remain fully visible. */
+#topBar{
+  height:86px !important;
+  min-height:86px !important;
+  max-height:86px !important;
+}
+
+#topBar > .hud-pill{
+  height:86px !important;
+  min-height:86px !important;
+  max-height:86px !important;
+}
+
+#topBar > .hud-track{
+  display:grid !important;
+  grid-template-rows:auto minmax(18px,auto) 14px !important;
+  align-content:center !important;
+  align-items:center !important;
+  row-gap:4px !important;
+  padding-top:8px !important;
+  padding-bottom:8px !important;
+  overflow:hidden !important;
+}
+
+#topBar > .hud-track .hud-label{
+  margin:0 !important;
+  line-height:1 !important;
+}
+
+#trackTitleDisplay{
+  display:block !important;
+  width:100% !important;
+  min-width:0 !important;
+  max-width:100% !important;
+  margin:0 !important;
+  overflow:hidden !important;
+  text-overflow:ellipsis !important;
+  white-space:nowrap !important;
+  line-height:1.15 !important;
+}
+
+#trackProgressWrap{
+  position:relative !important;
+  display:block !important;
+  visibility:visible !important;
+  opacity:1 !important;
+  width:100% !important;
+  height:14px !important;
+  min-height:14px !important;
+  max-height:14px !important;
+  margin:0 !important;
+  align-self:end !important;
+  overflow:hidden !important;
+}
+
+#trackProgressFill{
+  display:block !important;
+  visibility:visible !important;
+  opacity:1 !important;
+  width:100% !important;
+  height:100% !important;
+}
+
+@media(max-width:620px){
+  #topBar{
+    height:76px !important;
+    min-height:76px !important;
+    max-height:76px !important;
+  }
+
+  #topBar > .hud-pill{
+    height:76px !important;
+    min-height:76px !important;
+    max-height:76px !important;
+  }
+
+  #topBar > .hud-track{
+    grid-template-rows:auto minmax(16px,auto) 11px !important;
+    row-gap:3px !important;
+    padding-top:6px !important;
+    padding-bottom:6px !important;
+  }
+
+  #trackTitleDisplay{
+    font-size:12px !important;
+  }
+
+  #trackProgressWrap{
+    height:11px !important;
+    min-height:11px !important;
+    max-height:11px !important;
+  }
+}
+
+
+/* v4.5.3 — iPhone Safari fullscreen control and scene anchoring. */
+body.mobile-browser .fullscreen-btn,
+#menu .fullscreen-btn{
+  position:absolute !important;
+  top:max(10px, env(safe-area-inset-top)) !important;
+  right:max(10px, env(safe-area-inset-right)) !important;
+  bottom:auto !important;
+  left:auto !important;
+  z-index:10050 !important;
+  margin:0 !important;
+  transform:none;
+  touch-action:manipulation;
+}
+
+body.mobile-browser.expanded-mobile{
+  position:fixed;
+  inset:0;
+  width:100vw;
+  height:var(--mobile-vh,100vh);
+  min-height:var(--mobile-vh,100vh);
+  overflow:hidden;
+}
+
+body.mobile-browser.expanded-mobile #device{
+  position:fixed;
+  inset:0;
+  width:var(--mobile-vw,100vw);
+  height:var(--mobile-vh,100vh);
+  max-width:none;
+  max-height:none;
+  border-radius:0;
+  box-shadow:none;
+}
+
+@media(max-width:620px){
+  body.mobile-browser .fullscreen-btn,
+  #menu .fullscreen-btn{
+    width:40px;
+    height:40px;
+    font-size:21px;
+  }
+}
+
+
+/* ============================================================
+   v4.6.0 — seven-day campaign selector
+   ============================================================ */
+#menu{
+  gap:7px;
+}
+
+#menu .menu-title-sprite-wrap{
+  height:clamp(112px,18vh,170px);
+  margin-bottom:0;
+}
+
+.campaign-week{
+  box-sizing:border-box;
+  width:min(calc(100% - 24px),430px);
+  max-width:430px;
+  margin:0 auto;
+  padding:10px 13px 11px;
+  flex:0 0 auto;
+  border:3px solid rgba(255,255,255,.95);
+  border-radius:20px;
+  background:rgba(255,255,255,.92);
+  box-shadow:0 7px 0 rgba(27,103,185,.18),0 12px 24px rgba(20,91,165,.18);
+  position:relative;
+  z-index:3;
+}
+
+.campaign-week-label{
+  margin-bottom:8px;
+  color:#184d91;
+  font:900 13px/1 "Nunito",sans-serif;
+  text-align:center;
+}
+
+.campaign-days{
+  display:grid;
+  grid-template-columns:repeat(7,minmax(0,1fr));
+  align-items:center;
+  gap:0;
+  position:relative;
+  padding:0 2px;
+}
+
+.campaign-days::before{
+  content:"";
+  position:absolute;
+  left:7%;
+  right:7%;
+  top:50%;
+  height:6px;
+  border-radius:999px;
+  background:#c8d1db;
+  transform:translateY(-50%);
+  z-index:0;
+}
+
+.campaign-day{
+  position:relative !important;
+  z-index:2;
+  justify-self:center;
+  width:36px;
+  height:36px;
+  min-width:36px;
+  padding:0;
+  border:3px solid #fff;
+  border-radius:50%;
+  background:#bfc8d2;
+  box-shadow:0 3px 0 #8e9aa7;
+  color:#fff;
+  font:1000 15px/1 "Nunito",sans-serif;
+  cursor:default;
+  touch-action:manipulation;
+  -webkit-tap-highlight-color:transparent;
+}
+
+.campaign-day.is-available{
+  background:linear-gradient(180deg,#ffbd4b,#f28a20);
+  box-shadow:0 3px 0 #c96b12;
+  cursor:pointer;
+}
+
+.campaign-day.is-selected{
+  outline:4px solid rgba(62,171,255,.34);
+  transform:translateY(-2px) scale(1.06);
+}
+
+.campaign-day.is-completed{
+  background:linear-gradient(180deg,#5fd984,#23a852);
+  box-shadow:0 3px 0 #16833c;
+  cursor:pointer;
+}
+
+.campaign-day:disabled{
+  opacity:1;
+  color:rgba(255,255,255,.82);
+}
+
+/* Green connector segments are painted from each completed day backward. */
+.campaign-day.is-completed::before{
+  content:"";
+  position:absolute;
+  right:50%;
+  top:50%;
+  width:calc((430px - 32px) / 7);
+  max-width:58px;
+  height:6px;
+  background:#2db45a;
+  transform:translateY(-50%);
+  z-index:-1;
+}
+
+.campaign-day[data-day="1"].is-completed::before{
+  display:none;
+}
+
+.campaign-track-caption{
+  margin-top:9px;
+  color:#7a94bd;
+  font:900 10px/1 "Nunito",sans-serif;
+  text-align:center;
+  text-transform:uppercase;
+  letter-spacing:.8px;
+}
+
+.campaign-track-title{
+  margin-top:3px;
+  min-height:18px;
+  overflow:hidden;
+  color:#184d91;
+  font:1000 16px/1.15 "Nunito",sans-serif;
+  text-align:center;
+  text-overflow:ellipsis;
+  white-space:nowrap;
+}
+
+#menu .board{
+  min-height:205px;
+  max-height:min(300px,34vh);
+  margin-top:0;
+}
+
+#menu .rows{
+  max-height:184px;
+}
+
+@media(max-width:520px){
+  #menu .menu-title-sprite-wrap{
+    height:clamp(92px,15vh,132px);
+  }
+
+  .campaign-week{
+    width:min(calc(100% - 12px),430px);
+    padding:8px 8px 9px;
+  }
+
+  .campaign-day{
+    width:32px;
+    height:32px;
+    min-width:32px;
+    font-size:13px;
+  }
+
+  .campaign-day.is-completed::before{
+    width:calc((100vw - 42px) / 7);
+  }
+
+  .campaign-track-title{
+    font-size:14px;
+  }
+
+  #menu .board{
+    min-height:180px;
+    max-height:29vh;
+  }
+
+  #menu .rows{
+    max-height:150px;
+  }
+}
+
+
+/* v4.6.1 — completed connector stays under the day buttons. */
+.campaign-days{
+  isolation:isolate;
+}
+
+.campaign-days::before{
+  z-index:0 !important;
+}
+
+.campaign-day{
+  z-index:2 !important;
+}
+
+.campaign-day.is-completed::before{
+  display:none !important;
+}
+
+.campaign-day.is-completed::after{
+  content:"";
+  position:absolute;
+  right:50%;
+  top:50%;
+  width:calc((430px - 32px) / 7);
+  max-width:58px;
+  height:6px;
+  border-radius:999px;
+  background:#2db45a;
+  transform:translateY(-50%);
+  z-index:-1;
+  pointer-events:none;
+}
+
+.campaign-day[data-day="1"].is-completed::after{
+  display:none;
+}
+
+@media(max-width:520px){
+  .campaign-day.is-completed::after{
+    width:calc((100vw - 42px) / 7);
+  }
+}
+
+
+/* ============================================================
+   v4.6.2 — real connector elements, always below day buttons
+   ============================================================ */
+.campaign-days{
+  display:grid !important;
+  grid-template-columns:
+    36px minmax(4px,1fr)
+    36px minmax(4px,1fr)
+    36px minmax(4px,1fr)
+    36px minmax(4px,1fr)
+    36px minmax(4px,1fr)
+    36px minmax(4px,1fr)
+    36px !important;
+  align-items:center !important;
+  gap:0 !important;
+  padding:0 2px !important;
+  isolation:auto !important;
+}
+
+.campaign-days::before{
+  display:none !important;
+}
+
+.campaign-day{
+  position:relative !important;
+  z-index:2 !important;
+  grid-row:1 !important;
+}
+
+.campaign-day::before,
+.campaign-day::after,
+.campaign-day.is-completed::before,
+.campaign-day.is-completed::after{
+  display:none !important;
+  content:none !important;
+}
+
+.campaign-connector{
+  display:block;
+  position:relative;
+  z-index:1;
+  grid-row:1;
+  width:calc(100% + 6px);
+  height:6px;
+  margin-left:-3px;
+  margin-right:-3px;
+  border-radius:999px;
+  background:#c8d1db;
+  pointer-events:none;
+}
+
+.campaign-connector.is-completed{
+  background:#2db45a;
+}
+
+@media(max-width:520px){
+  .campaign-days{
+    grid-template-columns:
+      32px minmax(3px,1fr)
+      32px minmax(3px,1fr)
+      32px minmax(3px,1fr)
+      32px minmax(3px,1fr)
+      32px minmax(3px,1fr)
+      32px minmax(3px,1fr)
+      32px !important;
+  }
+}
+
+
+/* v4.6.3 — campaign progress reset in settings. */
+.campaign-reset-actions{
+  display:grid !important;
+  grid-template-columns:minmax(0,1fr) minmax(110px,150px) !important;
+  gap:10px !important;
+  align-items:stretch;
+}
+
+.campaign-reset-btn{
+  min-width:0;
+  white-space:normal;
+  line-height:1.15;
+}
+
+@media(max-width:430px){
+  .campaign-reset-actions{
+    grid-template-columns:1fr !important;
+  }
+
+  .campaign-reset-btn{
+    order:2;
+  }
+}
+
+
+/* ============================================================
+   v5.0.0 — server tracks, sequential days and local-only settings
+   ============================================================ */
+.campaign-day.is-locked{
+  background:#bfc8d2 !important;
+  box-shadow:0 3px 0 #8e9aa7 !important;
+  cursor:default !important;
+}
+.campaign-day.is-missing{
+  background:linear-gradient(180deg,#ff8585,#d93c4b) !important;
+  box-shadow:0 3px 0 #a52837 !important;
+  cursor:not-allowed !important;
+}
+.campaign-day.is-available{
+  background:linear-gradient(180deg,#ffbd4b,#f28a20) !important;
+  box-shadow:0 3px 0 #c96b12 !important;
+}
+.campaign-day.is-completed{
+  background:linear-gradient(180deg,#5fd984,#23a852) !important;
+  box-shadow:0 3px 0 #16833c !important;
+}
+.campaign-track-error{
+  margin-top:5px;
+  color:#b72c3d;
+  font:900 11px/1.2 "Nunito",sans-serif;
+  text-align:center;
+}
+#playBtn:disabled,
+#playBtn[aria-disabled="true"]{
+  filter:grayscale(.8);
+  opacity:.55;
+  cursor:not-allowed;
+  transform:none !important;
+}
+#settings .track-settings-card{
+  width:min(100%,430px) !important;
+}
+#settings .settings-section:first-of-type{
+  margin-top:0;
+}
+#settings .campaign-reset-actions{
+  margin-top:14px;
+}
+
+
+/* v5.0.2 — no empty red error plaque in settings. */
+.key-bind-hint.has-error{
+  color:#b83258;
+}
+
+
+
+
+/* ============================================================
+   v5.2.1 — menu total score and song-only leaderboards
+   ============================================================ */
+.menu-total-score{
+  position:absolute;
+  top:max(10px, env(safe-area-inset-top));
+  left:max(10px, env(safe-area-inset-left));
+  z-index:10020;
+  min-width:112px;
+  padding:8px 11px 7px;
+  border:2px solid rgba(255,255,255,.94);
+  border-radius:14px;
+  background:linear-gradient(180deg,rgba(255,250,224,.98),rgba(255,227,116,.98));
+  color:#704500;
+  box-shadow:0 5px 0 rgba(176,119,0,.48),0 8px 18px rgba(26,77,145,.22);
+  pointer-events:none;
+}
+
+.menu-total-score span{
+  display:block;
+  font:900 9px/1.05 var(--font);
+  text-transform:uppercase;
+  letter-spacing:.5px;
+  opacity:.78;
+}
+
+.menu-total-score strong{
+  display:block;
+  margin-top:2px;
+  font:1000 23px/1 var(--font);
+  font-variant-numeric:tabular-nums;
+}
+
+@media(max-width:520px){
+  .menu-total-score{
+    min-width:96px;
+    padding:7px 9px 6px;
+  }
+
+  .menu-total-score strong{
+    font-size:20px;
+  }
+}
+
+
+/* ============================================================
+   v5.3.0 — languages + scene/layout polish
+   ============================================================ */
+.language-btn{
+  position:absolute;
+  top:max(10px, env(safe-area-inset-top));
+  left:max(10px, env(safe-area-inset-left));
+  z-index:10040;
+  min-width:58px;
+  min-height:38px;
+  padding:7px 10px;
+  border:2px solid rgba(255,255,255,.96);
+  border-radius:12px;
+  background:linear-gradient(180deg,#fff,#e7f5ff);
+  color:#24528f;
+  box-shadow:0 4px 0 #91c8eb,0 7px 15px rgba(20,82,145,.22);
+  font:1000 13px/1 var(--font);
+  cursor:pointer;
+  pointer-events:auto;
+}
+
+.language-btn:active{
+  transform:translateY(2px);
+  box-shadow:0 2px 0 #91c8eb;
+}
+
+/* Total score remains in the upper-left area, directly below language. */
+.menu-total-score{
+  top:max(56px, calc(env(safe-area-inset-top) + 56px)) !important;
+}
+
+.menu-title-sprite-wrap{
+  position:relative;
+}
+
+.menu-title-localized{
+  display:none;
+  width:min(94%,390px);
+  margin:auto;
+  text-align:center;
+  color:#ffb719;
+  -webkit-text-stroke:1.5px #7e3300;
+  text-shadow:0 3px 0 #fff,0 7px 12px rgba(38,91,150,.28);
+  font:1000 clamp(28px,8vw,43px)/1.02 var(--font);
+  letter-spacing:.2px;
+  overflow-wrap:anywhere;
+}
+
+html:not([lang="ru"]) .menu-title-sprite{
+  display:none !important;
+}
+
+html:not([lang="ru"]) .menu-title-localized{
+  display:block;
+}
+
+html[lang="ar"] .menu-title-localized{
+  -webkit-text-stroke:1px #7e3300;
+  font-size:clamp(27px,7.5vw,40px);
+}
+
+html[lang="hi"] .menu-title-localized{
+  -webkit-text-stroke:1px #7e3300;
+  font-size:clamp(25px,7vw,38px);
+}
+
+html[dir="rtl"] .leaderboard-track,
+html[dir="rtl"] .bhead,
+html[dir="rtl"] .settings-card{
+  direction:rtl;
+}
+
+html[dir="rtl"] .nm,
+html[dir="rtl"] .leaderboard-track-name,
+html[dir="rtl"] #campaignTrackTitle{
+  unicode-bidi:plaintext;
+}
+
+html[dir="rtl"] .key-bindings-grid{
+  direction:rtl;
+}
+
+/* Give long translated strings a little more room. */
+body[data-language="ar"] #settings .track-settings-card,
+body[data-language="hi"] #settings .track-settings-card{
+  width:min(100%,420px) !important;
+}
+
+body[data-language="ar"] .campaign-reset-btn,
+body[data-language="hi"] .campaign-reset-btn{
+  font-size:12px;
+}
+
+/* iPhone Safari: keep menu controls clear of the safe-area and avoid
+   scene-related UI collisions in the tall visible viewport. */
+body.mobile-browser #menu{
+  padding-top:max(12px, env(safe-area-inset-top));
+}
+
+@media(max-width:390px){
+  .language-btn{
+    min-width:52px;
+    min-height:35px;
+    padding:6px 8px;
+  }
+  .menu-total-score{
+    top:max(52px, calc(env(safe-area-inset-top) + 52px)) !important;
+  }
+}
+
+
+/* ============================================================
+   v5.3.2 — menu controls, RTL progress, startup smoothing
+   ============================================================ */
+.menu-status-row{
+  position:absolute;
+  top:max(10px, env(safe-area-inset-top));
+  left:max(10px, env(safe-area-inset-left));
+  z-index:10040;
+  display:flex;
+  flex-direction:row;
+  align-items:flex-start;
+  gap:8px;
+  direction:ltr;
+  pointer-events:none;
+}
+
+.menu-status-row .menu-total-score{
+  position:relative !important;
+  top:auto !important;
+  left:auto !important;
+  right:auto !important;
+  margin:0 !important;
+  flex:0 0 auto;
+}
+
+.menu-status-row .language-btn{
+  position:relative !important;
+  top:auto !important;
+  left:auto !important;
+  right:auto !important;
+  margin:0 !important;
+  flex:0 0 auto;
+  pointer-events:auto;
+}
+
+html[dir="rtl"] .menu-status-row .menu-total-score{
+  direction:rtl;
+  text-align:right;
+}
+
+/* Progress is always a physical left-to-right bar, independent of page RTL. */
+#hud,
+#topBar,
+#trackProgressWrap{
+  direction:ltr !important;
+}
+
+#trackProgressFill{
+  left:0 !important;
+  right:auto !important;
+  inset:auto !important;
+  top:0 !important;
+  bottom:0 !important;
+  width:var(--track-progress,0%) !important;
+  max-width:100% !important;
+  transform:none !important;
+  transform-origin:0 50% !important;
+  display:block !important;
+  visibility:visible !important;
+  opacity:1 !important;
+}
+
+/* Keep translated HUD labels readable while layout/progress stay LTR. */
+html[dir="rtl"] #topBar .hud-label,
+html[dir="rtl"] #topBar .hud-exit-value{
+  direction:rtl;
+  unicode-bidi:plaintext;
+}
+
+@media(max-width:390px){
+  .menu-status-row{
+    gap:6px;
+  }
+}
+
+
+/* ============================================================
+   v5.3.3 — performance cleanup
+   ============================================================ */
+#trackProgressFill{
+  will-change:auto !important;
+}
+
+
+/* ============================================================
+   Menu onboarding callouts
+   ============================================================ */
+.menu-tutorial{
+  position:absolute;
+  inset:0;
+  z-index:12060;
+  pointer-events:auto;
+  background:transparent !important;
+}
+
+.menu-tutorial.hidden{
+  display:none !important;
+}
+
+/* The menu may remain vertically scrollable on short screens, but the native
+   scrollbar is intentionally hidden so it does not appear as part of the UI. */
+#menu{
+  scrollbar-width:none !important;
+  -ms-overflow-style:none !important;
+}
+#menu::-webkit-scrollbar{
+  width:0 !important;
+  height:0 !important;
+  display:none !important;
+}
+
+/* Separate dimming layer: highlighted UI sits above it, callouts sit above everything. */
+#menu.menu-tutorial-intro::before,
+#menu.tutorial-play-active::before,
+#menu.menu-tutorial-followup::before{
+  content:"";
+  position:absolute;
+  inset:0;
+  left:0 !important;
+  top:0 !important;
+  right:0 !important;
+  bottom:0 !important;
+  z-index:12000;
+  background:rgba(6,18,40,.34);
+  pointer-events:none;
+  transform:none !important;
+  color:transparent !important;
+  font-size:0 !important;
+  font-weight:400 !important;
+  filter:none !important;
+  opacity:1 !important;
+}
+
+.menu-tutorial-callout{
+  position:absolute;
+  z-index:12070;
+  padding:10px 14px;
+  border:2px solid #91a9bc;
+  border-radius:16px;
+  background:rgba(255,255,255,.98);
+  color:#111820;
+  box-shadow:
+    0 3px 0 rgba(65,99,123,.20),
+    0 7px 18px rgba(26,73,111,.18);
+  text-align:center;
+  font:900 12px/1.18 var(--font);
+  box-sizing:border-box;
+  pointer-events:none;
+}
+
+.menu-tutorial .hidden{
+  display:none !important;
+}
+
+.menu-tutorial-highlight{
+  position:relative;
+  z-index:12020 !important;
+  filter:none !important;
+  opacity:1 !important;
+  pointer-events:none !important;
+  box-shadow:none !important;
+  isolation:isolate;
+}
+
+
+#menu.menu-tutorial-intro .menu-status-row{
+  z-index:12025 !important;
+  pointer-events:none !important;
+}
+#menu.menu-tutorial-intro #campaignWeek,
+#menu.menu-tutorial-intro .board,
+#menu.menu-tutorial-followup #campaignWeek,
+#menu.menu-tutorial-followup .menu-actions{
+  position:relative;
+  z-index:12025 !important;
+}
+#menu.menu-tutorial-intro .menu-total-score,
+#menu.menu-tutorial-intro #languageBtn,
+#menu.menu-tutorial-intro #campaignWeek,
+#menu.menu-tutorial-intro .board,
+#menu.menu-tutorial-followup #campaignWeek,
+#menu.menu-tutorial-followup #playBtn{
+  filter:none !important;
+  opacity:1 !important;
+}
+
+/* Bubble pointing left toward the language button. */
+.menu-tutorial-language::before{
+  content:"";
+  position:absolute;
+  left:-15px;
+  top:calc(var(--tutorial-arrow-y, 24px) - 10px);
+  width:0;
+  height:0;
+  border-top:10px solid transparent;
+  border-bottom:10px solid transparent;
+  border-right:15px solid #91a9bc;
+}
+
+.menu-tutorial-language::after{
+  content:"";
+  position:absolute;
+  left:-11px;
+  top:calc(var(--tutorial-arrow-y, 24px) - 8px);
+  width:0;
+  height:0;
+  border-top:8px solid transparent;
+  border-bottom:8px solid transparent;
+  border-right:12px solid rgba(255,255,255,.98);
+}
+
+/* Upward arrows for score / leaderboard / play when bubble is below the target. */
+.menu-tutorial-score::before,
+.menu-tutorial-leaderboard::before,
+.menu-tutorial-play.arrow-up::before,
+.menu-tutorial-days:not(.arrow-down)::before{
+  content:"";
+  position:absolute;
+  top:-15px;
+  left:calc(var(--tutorial-arrow-x, 36px) - 10px);
+  width:0;
+  height:0;
+  border-left:10px solid transparent;
+  border-right:10px solid transparent;
+  border-bottom:15px solid #91a9bc;
+}
+
+.menu-tutorial-score::after,
+.menu-tutorial-leaderboard::after,
+.menu-tutorial-play.arrow-up::after,
+.menu-tutorial-days:not(.arrow-down)::after{
+  content:"";
+  position:absolute;
+  top:-11px;
+  left:calc(var(--tutorial-arrow-x, 36px) - 8px);
+  width:0;
+  height:0;
+  border-left:8px solid transparent;
+  border-right:8px solid transparent;
+  border-bottom:12px solid rgba(255,255,255,.98);
+}
+
+/* Downward arrow for the play bubble when it sits above the Play button. */
+.menu-tutorial-play.arrow-down::before{
+  content:"";
+  position:absolute;
+  bottom:-15px;
+  left:calc(var(--tutorial-arrow-x, 36px) - 10px);
+  width:0;
+  height:0;
+  border-left:10px solid transparent;
+  border-right:10px solid transparent;
+  border-top:15px solid #91a9bc;
+}
+
+.menu-tutorial-play.arrow-down::after{
+  content:"";
+  position:absolute;
+  bottom:-11px;
+  left:calc(var(--tutorial-arrow-x, 36px) - 8px);
+  width:0;
+  height:0;
+  border-left:8px solid transparent;
+  border-right:8px solid transparent;
+  border-top:12px solid rgba(255,255,255,.98);
+}
+
+.menu-tutorial-days.arrow-down::before{
+  content:"";
+  position:absolute;
+  bottom:-15px;
+  left:calc(var(--tutorial-arrow-x, 36px) - 10px);
+  width:0;
+  height:0;
+  border-left:10px solid transparent;
+  border-right:10px solid transparent;
+  border-top:15px solid #91a9bc;
+}
+
+.menu-tutorial-days.arrow-down::after{
+  content:"";
+  position:absolute;
+  bottom:-11px;
+  left:calc(var(--tutorial-arrow-x, 36px) - 8px);
+  width:0;
+  height:0;
+  border-left:8px solid transparent;
+  border-right:8px solid transparent;
+  border-top:12px solid rgba(255,255,255,.98);
+}
+
+.menu-tutorial-play-step{
+  position:absolute;
+  inset:0;
+  z-index:1;
+}
+
+.menu-tutorial-play-focus{
+  position:absolute;
+  border-radius:18px;
+  border:2px solid rgba(255,255,255,.95);
+  box-shadow:
+    0 0 0 3px rgba(132,223,74,.68),
+    0 0 24px rgba(132,223,74,.35);
+  background:rgba(132,223,74,.15);
+  pointer-events:none;
+}
+
+.menu-tutorial-play-hitbox{
+  position:absolute;
+  border:none;
+  background:transparent;
+  cursor:pointer;
+  padding:0;
+  margin:0;
+  appearance:none;
+  -webkit-appearance:none;
+}
+
+.menu-tutorial-play{
+  z-index:2;
+}
+
+html[dir="rtl"] .menu-tutorial-callout{
+  direction:rtl;
+}
+
+@media(max-width:390px){
+  .menu-tutorial-callout{
+    padding:8px 11px;
+    border-radius:14px;
+    font-size:11px;
+  }
+}
+
+
+
+/* ============================================================
+   v7.0.5 — guided gameplay tutorial
+   ============================================================ */
+/* In the second menu tutorial step the real Play button itself sits above
+   the dim layer; the settings button stays below it. */
+#menu.tutorial-play-active .menu-actions{
+  z-index:auto !important;
+}
+#menu.tutorial-play-active #playBtn{
+  position:relative !important;
+  z-index:12080 !important;
+  filter:none !important;
+  opacity:1 !important;
+}
+#menu.tutorial-play-active #settingsBtn{
+  z-index:2 !important;
+}
+.menu-tutorial-play-focus,
+.menu-tutorial-play-hitbox{
+  display:none !important;
+}
+
+.gameplay-tutorial{
+  position:absolute;
+  inset:0;
+  z-index:12050;
+  pointer-events:auto;
+  background:transparent;
+  overflow:hidden;
+}
+.gameplay-tutorial.hidden,
+.gameplay-tutorial .hidden{
+  display:none !important;
+}
+.game-tutorial-step{
+  position:absolute;
+  inset:0;
+  z-index:4;
+  pointer-events:none;
+}
+.game-tutorial-spotlight{
+  position:absolute;
+  z-index:2;
+  pointer-events:none;
+  border:3px solid rgba(255,255,255,.98);
+  border-radius:18px;
+  background:transparent;
+  box-shadow:
+    0 0 0 9999px rgba(3,14,34,.56),
+    0 0 0 5px rgba(74,190,255,.24),
+    0 0 24px rgba(255,255,255,.30);
+}
+.game-tutorial-spotlight.is-circle{border-radius:999px;}
+.game-tutorial-spotlight.is-pill{border-radius:999px;}
+.game-tutorial-callout{
+  position:absolute;
+  z-index:6;
+  padding:10px 13px;
+  border:2px solid #91a9bc;
+  border-radius:16px;
+  background:rgba(255,255,255,.98);
+  color:#111820;
+  box-shadow:0 3px 0 rgba(65,99,123,.20),0 7px 18px rgba(26,73,111,.20);
+  text-align:center;
+  white-space:pre-line;
+  font:900 12px/1.18 var(--font);
+  box-sizing:border-box;
+}
+/* Standard up arrow */
+.game-tutorial-hud::before,
+.game-tutorial-exit::before{
+  content:"";
+  position:absolute;
+  top:-15px;
+  left:calc(var(--tutorial-arrow-x,50%) - 10px);
+  border-left:10px solid transparent;
+  border-right:10px solid transparent;
+  border-bottom:15px solid #91a9bc;
+}
+.game-tutorial-hud::after,
+.game-tutorial-exit::after{
+  content:"";
+  position:absolute;
+  top:-11px;
+  left:calc(var(--tutorial-arrow-x,50%) - 8px);
+  border-left:8px solid transparent;
+  border-right:8px solid transparent;
+  border-bottom:12px solid #fff;
+}
+/* Two downward arrows toward two lanes/buttons */
+.game-tutorial-lanes::before,
+.game-tutorial-targets-text::before{
+  content:"";
+  position:absolute;
+  bottom:-15px;
+  left:calc(var(--tutorial-arrow-left,30%) - 10px);
+  border-left:10px solid transparent;
+  border-right:10px solid transparent;
+  border-top:15px solid #91a9bc;
+  filter:drop-shadow(calc(var(--tutorial-arrow-right,70%) - var(--tutorial-arrow-left,30%)) 0 0 #91a9bc);
+}
+.game-tutorial-lanes::after,
+.game-tutorial-targets-text::after{
+  content:"";
+  position:absolute;
+  bottom:-11px;
+  left:calc(var(--tutorial-arrow-left,30%) - 8px);
+  border-left:8px solid transparent;
+  border-right:8px solid transparent;
+  border-top:12px solid #fff;
+  filter:drop-shadow(calc(var(--tutorial-arrow-right,70%) - var(--tutorial-arrow-left,30%)) 0 0 #fff);
+}
+/* Chip panel side arrows */
+.game-tutorial-chip-text.arrow-left::before{
+  content:"";position:absolute;left:-15px;top:calc(var(--tutorial-arrow-y,50%) - 10px);
+  border-top:10px solid transparent;border-bottom:10px solid transparent;border-right:15px solid #91a9bc;
+}
+.game-tutorial-chip-text.arrow-left::after{
+  content:"";position:absolute;left:-11px;top:calc(var(--tutorial-arrow-y,50%) - 8px);
+  border-top:8px solid transparent;border-bottom:8px solid transparent;border-right:12px solid #fff;
+}
+.game-tutorial-chip-text.arrow-right::before{
+  content:"";position:absolute;right:-15px;top:calc(var(--tutorial-arrow-y,50%) - 10px);
+  border-top:10px solid transparent;border-bottom:10px solid transparent;border-left:15px solid #91a9bc;
+}
+.game-tutorial-chip-text.arrow-right::after{
+  content:"";position:absolute;right:-11px;top:calc(var(--tutorial-arrow-y,50%) - 8px);
+  border-top:8px solid transparent;border-bottom:8px solid transparent;border-left:12px solid #fff;
+}
+/* Timing panel points down to the active bottom button. */
+.game-tutorial-timing-text::before{
+  content:"";position:absolute;bottom:-15px;left:calc(var(--tutorial-arrow-x,50%) - 10px);
+  border-left:10px solid transparent;border-right:10px solid transparent;border-top:15px solid #91a9bc;
+}
+.game-tutorial-timing-text::after{
+  content:"";position:absolute;bottom:-11px;left:calc(var(--tutorial-arrow-x,50%) - 8px);
+  border-left:8px solid transparent;border-right:8px solid transparent;border-top:12px solid #fff;
+}
+.game-tutorial-rating-text,
+.game-tutorial-results-text{
+  box-shadow:0 3px 0 rgba(65,99,123,.20),0 7px 18px rgba(26,73,111,.24);
+}
+html[dir="rtl"] .game-tutorial-callout{direction:rtl;}
+@media(max-width:390px){
+  .game-tutorial-callout{padding:8px 10px;font-size:11px;border-radius:14px;}
+}
+
+
+.gameplay-tutorial-highlight{
+  position:relative;
+  z-index:12070 !important;
+  filter:none !important;
+  opacity:1 !important;
+  pointer-events:none !important;
+}
+
+.gameover-tutorial{
+  position:absolute;
+  inset:0;
+  z-index:20;
+  pointer-events:auto;
+  background:rgba(6,18,40,.42);
+}
+.gameover-tutorial.hidden{
+  display:none !important;
+}
+.gameover-tutorial-callout{
+  position:absolute;
+  z-index:24;
+  padding:10px 13px;
+  border:2px solid #91a9bc;
+  border-radius:16px;
+  background:rgba(255,255,255,.98);
+  color:#111820;
+  box-shadow:0 3px 0 rgba(65,99,123,.20),0 7px 18px rgba(26,73,111,.20);
+  text-align:center;
+  white-space:pre-line;
+  font:900 12px/1.18 var(--font);
+  box-sizing:border-box;
+  pointer-events:none;
+}
+.gameover-tutorial-name::before,
+.gameover-tutorial-save::before{
+  content:"";
+  position:absolute;
+  bottom:-15px;
+  left:calc(var(--tutorial-arrow-x,50%) - 10px);
+  border-left:10px solid transparent;
+  border-right:10px solid transparent;
+  border-top:15px solid #91a9bc;
+}
+.gameover-tutorial-name::after,
+.gameover-tutorial-save::after{
+  content:"";
+  position:absolute;
+  bottom:-11px;
+  left:calc(var(--tutorial-arrow-x,50%) - 8px);
+  border-left:8px solid transparent;
+  border-right:8px solid transparent;
+  border-top:12px solid #fff;
+}
+.gameover-tutorial-highlight{
+  position:relative !important;
+  z-index:30 !important;
+  filter:none !important;
+  opacity:1 !important;
+}
+#gameoverTutorial.active #nameInput,
+#gameoverTutorial.active #saveBtn{
+  pointer-events:auto !important;
+}
+@media(max-width:390px){
+  .gameover-tutorial-callout{padding:8px 10px;font-size:11px;border-radius:14px;}
+}
+
+#gameover.gameover-tutorial-active .nameEntry,
+#gameover.gameover-tutorial-active .row2{
+  position:relative;
+  z-index:28 !important;
+}
+#gameover.gameover-tutorial-active #nameInput,
+#gameover.gameover-tutorial-active #saveBtn{
+  position:relative !important;
+  z-index:31 !important;
+  pointer-events:auto !important;
+  filter:none !important;
+  opacity:1 !important;
+}
+#gameover.gameover-tutorial-active #nameInput{
+  user-select:text !important;
+  -webkit-user-select:text !important;
+  touch-action:manipulation !important;
+}
+
+body.gameplay-tutorial-overview #hud{
+  z-index:12070 !important;
+}
+body.gameplay-tutorial-overview #topBar{
+  pointer-events:none !important;
+}
+
+
+/* ---------- Event complete (schematic placeholder art) ---------- */
+#eventComplete{
+  justify-content:center;
+  background:linear-gradient(180deg,rgba(27,169,239,.94),rgba(10,104,200,.98));
+}
+#eventComplete .event-complete-card{
+  width:min(calc(100% - 24px),430px);
+  padding:26px 18px 20px;
+  border-radius:24px;
+  border:3px solid rgba(255,255,255,.96);
+  background:rgba(255,255,255,.96);
+  box-shadow:0 9px 0 rgba(27,103,185,.22),0 20px 44px rgba(20,91,165,.26);
+  color:#194b8e;
+  text-align:center;
+  position:relative;
+  z-index:2;
+}
+#eventComplete .event-complete-title{font-size:30px;line-height:1.05;font-weight:900;color:#1558a7;}
+#eventComplete .event-complete-sub{margin-top:10px;font-size:19px;font-weight:900;}
+#eventComplete .event-complete-score{margin-top:20px;padding:15px;border-radius:18px;background:#fff3c8;font-size:22px;font-weight:900;}
+#eventComplete .event-complete-score strong{font-size:31px;color:#f39b00;}
+#eventComplete .event-complete-days{margin-top:16px;padding:10px;border-radius:14px;background:#eaf7ff;font-size:16px;font-weight:900;letter-spacing:2px;color:#34a85d;}
+#eventComplete .event-reward-btn{margin-top:20px;}

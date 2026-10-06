@@ -1,0 +1,282 @@
+<!DOCTYPE html>
+<html lang="ru" dir="ltr">
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
+  <meta http-equiv="Pragma" content="no-cache">
+  <meta http-equiv="Expires" content="0">
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no, viewport-fit=cover">
+  <meta name="theme-color" content="#109fe9">
+  <meta name="mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+  <title>Ритм с Дино</title>
+  <link rel="preload" as="image" href="assets/images/characters-left-v440.png">
+  <link rel="preload" as="image" href="assets/images/characters-right-v440.png">
+  <link rel="preload" as="image" href="assets/images/dino-center-v440.png">
+  <link rel="preload" as="image" href="assets/images/forest-backdrop-v440.png">
+  <link rel="preload" as="image" href="assets/images/lanes-space-v440.png">
+  <link rel="preload" as="image" href="assets/images/menu-title-v440.png">
+  <link rel="preload" as="image" href="assets/images/stage-platform-v440.png">
+  <link rel="preload" as="audio" href="assets/tracks/twinkle_twinkle_little_star/track.mp3">
+  <link rel="preload" as="audio" href="assets/tracks/wheels_on_the_bus/track.mp3">
+  <link rel="preload" as="audio" href="assets/tracks/mary_had_a_little_lamb/track.mp3">
+  <link rel="preload" as="audio" href="assets/tracks/clap_your_hands/track.mp3">
+  <link rel="preload" as="audio" href="assets/tracks/baby_shark/track.mp3">
+  <link rel="preload" as="audio" href="assets/tracks/ode_to_joy/track.mp3">
+  <link rel="preload" as="audio" href="assets/tracks/eine_kleine_nachtmusik/track.mp3">
+  <link rel="stylesheet" href="styles-v89.css">
+  <script>
+    // Cache-bust runtime JS on every page refresh. This is intentionally
+    // generated in index.html: code inside a cached game-v89.js cannot
+    // invalidate itself before it has loaded.
+    const neonRuntimeVersion = Date.now();
+    document.write(
+      '<script src="config-v89.js?v=' + neonRuntimeVersion + '"><\/script>'
+    );
+    document.write(
+      '<script src="game-v89.js?v=' + neonRuntimeVersion + '" defer><\/script>'
+    );
+  </script>
+</head>
+<body>
+<div id="device">
+  <canvas id="game"></canvas>
+
+  <!-- HUD -->
+  <div id="hud">
+    <div id="topBar">
+      <div class="hud-pill hud-track">
+        <div class="hud-label" data-i18n="track">Трек</div>
+        <div id="trackTitleDisplay" class="hud-value">—</div>
+        <div id="trackProgressWrap"><div id="trackProgressFill"></div></div>
+      </div>
+
+      <div class="hud-pill hud-score">
+        <div class="hud-label" data-i18n="score">Очки</div>
+        <div id="score">0</div>
+      </div>
+
+      <button id="exitGameBtn" class="hud-pill hud-exit" type="button" aria-label="Выйти в меню" data-i18n-aria-label="exitMenu">
+        <span class="hud-exit-value" data-i18n="exitMenu">Выйти в меню</span>
+      </button>
+    </div>
+  </div>
+
+  <!-- MENU -->
+  <section id="menu" class="overlay">
+    <div class="menu-status-row">
+      <div class="menu-total-score" aria-label="Общее количество очков" data-i18n-aria-label="totalScore">
+        <span data-i18n="totalScore">Общие очки</span>
+        <strong id="menuTotalScore">0</strong>
+      </div>
+      <button class="language-btn" id="languageBtn" type="button" aria-label="Язык">[RU]</button>
+    </div>
+    <div class="menu-tutorial hidden" id="menuTutorial" aria-hidden="true">
+      <div class="menu-tutorial-callout menu-tutorial-language" id="menuTutorialLanguage"
+           data-i18n="tutorialLanguage">
+        Здесь можно сменить язык.
+      </div>
+      <div class="menu-tutorial-callout menu-tutorial-score" id="menuTutorialScore"
+           data-i18n="tutorialTotalScore">
+        Это общий счет, который Вы набрали за все уровни.
+      </div>
+      <div class="menu-tutorial-callout menu-tutorial-days hidden" id="menuTutorialDays"
+           data-i18n="tutorialDays">
+        Здесь отображаются уровни (дни). В начале доступен только первый. Они открываются последовательно, один за другим, после прохождения предыдущего.
+      </div>
+      <div class="menu-tutorial-callout menu-tutorial-leaderboard hidden" id="menuTutorialLeaderboard"
+           data-i18n="tutorialLeaderboard">
+        Это таблица лидеров. Здесь показываются лучшие игроки, а также ваш личный счет.
+      </div>
+      <div class="menu-tutorial-play-step hidden" id="menuTutorialPlayStep" aria-hidden="true">
+        <div class="menu-tutorial-callout menu-tutorial-play" id="menuTutorialPlay"
+             data-i18n="tutorialPlay">
+          Нажмите на кнопку «Играть», чтобы запустить первый уровень.
+        </div>
+      </div>
+      <div class="menu-tutorial-callout menu-tutorial-play hidden" id="menuTutorialReplayPlay"
+           data-i18n="tutorialPlayNext">
+        Нажмите на кнопку «Играть», чтобы запустить следующий уровень.
+      </div>
+    </div>
+    <div class="menu-title-sprite-wrap">
+      <img class="menu-title-sprite" src="assets/images/menu-title-v440.png" alt="Neon Lanes Kids">
+      <div class="menu-title-localized" data-i18n="appTitle">Ритм с Дино</div>
+    </div>
+
+    <div class="campaign-week" id="campaignWeek" aria-label="Программа на 7 дней" data-i18n-aria-label="campaignProgram">
+      <div class="campaign-week-label" data-i18n="chooseDay">Выбери день</div>
+      <div class="campaign-days" role="group" aria-label="Дни программы">
+        <button class="campaign-day" type="button" data-day="1" aria-label="День 1">1</button>
+        <span class="campaign-connector" data-to-day="2" aria-hidden="true"></span>
+        <button class="campaign-day" type="button" data-day="2" aria-label="День 2">2</button>
+        <span class="campaign-connector" data-to-day="3" aria-hidden="true"></span>
+        <button class="campaign-day" type="button" data-day="3" aria-label="День 3">3</button>
+        <span class="campaign-connector" data-to-day="4" aria-hidden="true"></span>
+        <button class="campaign-day" type="button" data-day="4" aria-label="День 4" disabled>4</button>
+        <span class="campaign-connector" data-to-day="5" aria-hidden="true"></span>
+        <button class="campaign-day" type="button" data-day="5" aria-label="День 5" disabled>5</button>
+        <span class="campaign-connector" data-to-day="6" aria-hidden="true"></span>
+        <button class="campaign-day" type="button" data-day="6" aria-label="День 6" disabled>6</button>
+        <span class="campaign-connector" data-to-day="7" aria-hidden="true"></span>
+        <button class="campaign-day" type="button" data-day="7" aria-label="День 7" disabled>7</button>
+      </div>
+      <div class="campaign-track-caption" data-i18n="todayPlays">Сегодня играет</div>
+      <div class="campaign-track-title" id="campaignTrackTitle" data-i18n-loading="loadingTrack">Загрузка трека…</div>
+      <div class="campaign-track-error hidden" id="campaignTrackError" role="status"></div>
+    </div>
+    <div class="board">
+      <div class="leaderboard-track">
+        <div class="leaderboard-track-name" id="menuBoardTrackName">Трек</div>
+        <div class="leaderboard-track-max" id="menuBoardTrackMax">Максимум: 0 очков</div>
+      </div>
+      <div class="bhead"><span data-i18n="onDevice">На этом устройстве</span><span data-i18n="top10">Топ 10</span></div>
+      <div class="rows" id="menuRows"></div>
+    </div>
+    <button class="fullscreen-btn" id="fullscreenBtn" type="button"
+      aria-label="Раскрыть на весь экран" title="Раскрыть на весь экран" data-i18n-aria-label="fullscreen" data-i18n-title="fullscreen">⛶</button>
+    <div class="menu-actions">
+      <button class="btn" id="playBtn" data-i18n="play">Играть</button>
+      <button class="btn settings-open" id="settingsBtn" aria-label="Настройки" data-i18n-aria-label="settings">⚙</button>
+    </div>
+  </section>
+
+  <!-- GAMEPLAY TUTORIAL -->
+  <div id="gameplayTutorial" class="gameplay-tutorial hidden" aria-hidden="true">
+    <div id="gameTutorialSpotlight" class="game-tutorial-spotlight hidden"></div>
+    <div id="gameTutorialSpotlight2" class="game-tutorial-spotlight hidden"></div>
+    <div id="gameTutorialSpotlight3" class="game-tutorial-spotlight hidden"></div>
+    <div id="gameTutorialSpotlight4" class="game-tutorial-spotlight hidden"></div>
+    <div id="gameTutorialSpotlight5" class="game-tutorial-spotlight hidden"></div>
+
+    <div id="gameTutorialOverview" class="game-tutorial-step hidden">
+      <div id="gameTutorialHud" class="game-tutorial-callout game-tutorial-hud" data-i18n="gameTutorialHud">
+        Здесь находится общая информация о текущей игре: играющая мелодия (трек) и количество набранных очков.
+      </div>
+      <div id="gameTutorialExit" class="game-tutorial-callout game-tutorial-exit" data-i18n="gameTutorialExit">
+        Кнопка возврата в меню.
+      </div>
+      <div id="gameTutorialLanes" class="game-tutorial-callout game-tutorial-lanes" data-i18n="gameTutorialLanes">
+        В игре есть две «нотные» дорожки. По ним двигаются ноты выбранной мелодии, которые представлены фишками.
+      </div>
+    </div>
+
+    <div id="gameTutorialTargets" class="game-tutorial-step hidden">
+      <div id="gameTutorialTargetsText" class="game-tutorial-callout game-tutorial-targets-text" data-i18n="gameTutorialTargets">
+        В самом низу каждой линии есть место, которое отображает идеальную позицию фишки для воспроизведения её ноты. Назовем это кнопкой.
+      </div>
+    </div>
+
+    <div id="gameTutorialChip" class="game-tutorial-step hidden">
+      <div id="gameTutorialChipText" class="game-tutorial-callout game-tutorial-chip-text" data-i18n="gameTutorialChip">
+        Это те самые фишки, которые представляют собой ноты мелодии.
+      </div>
+    </div>
+
+    <div id="gameTutorialTiming" class="game-tutorial-step hidden">
+      <div id="gameTutorialTimingText" class="game-tutorial-callout game-tutorial-timing-text" data-i18n="gameTutorialTiming">
+        Когда фишка соединяется с кнопкой, настает идеальный момент для того, чтобы сыграть ноту! Нажмите на кнопку линии или на саму линию, чтобы попасть в ритм мелодии.
+      </div>
+    </div>
+
+    <div id="gameTutorialRating" class="game-tutorial-step hidden">
+      <div id="gameTutorialRatingText" class="game-tutorial-callout game-tutorial-rating-text" data-i18n="gameTutorialRating">
+        В зависимости от того, насколько близко были фишка и кнопка друг к другу в момент нажатия, вы получите результат «идеально», «хорошо» или «ок».
+      </div>
+    </div>
+
+    <div id="gameTutorialResults" class="game-tutorial-step hidden">
+      <div id="gameTutorialResultsText" class="game-tutorial-callout game-tutorial-results-text" data-i18n="gameTutorialResults">
+        Продолжайте играть, пытаясь набрать как можно больше очков!
+
+«Идеально» дает 3 очка, «хорошо» — 2 очка, «ок» — 1 очко.
+
+За промах не дают очков, но и не отнимают.
+      </div>
+    </div>
+  </div>
+
+  <div id="countdownOverlay" class="countdown-overlay hidden" aria-live="polite">
+    <div id="countdownValue" class="countdown-value">3</div>
+  </div>
+
+  <!-- SETTINGS -->
+  <section id="settings" class="overlay hidden">
+    <div class="settings-card track-settings-card">
+      <h2 class="settings-title" data-i18n="settings">Настройки</h2>
+
+      <div class="settings-section">
+        <h3 data-i18n="gameKeys">Игровые клавиши</h3>
+        <div class="key-bindings-grid">
+          <span data-i18n="lane1">Линия 1</span><button class="key-bind-btn" data-lane="0" type="button">Q</button>
+          <span data-i18n="lane2">Линия 2</span><button class="key-bind-btn" data-lane="1" type="button">W</button>
+        </div>
+        <div class="key-bind-hint" data-i18n="keyHint">Нажмите на кнопку, затем нажмите новую клавишу.</div>
+      </div>
+
+      <div class="settings-section toggle-settings-section">
+        <label class="toggle-row" for="showHotkeysToggle">
+          <span data-i18n="hideHotkeys">Скрыть отображения горячих клавиш на кнопках</span>
+          <input id="showHotkeysToggle" type="checkbox">
+          <span class="toggle-ui" aria-hidden="true"></span>
+        </label>
+      </div>
+
+      <div class="settings-buttons campaign-reset-actions">
+        <button class="btn soft-danger campaign-reset-btn" id="resetCampaignProgressBtn" type="button" data-i18n="resetProgress">Стереть прогресс по дням</button>
+        <button class="btn" id="settingsCloseBtn" type="button" data-i18n="done">Готово</button>
+      </div>
+    </div>
+  </section>
+
+  <!-- GAME OVER -->
+  <section id="gameover" class="overlay hidden">
+    <div class="go-head">
+      <div class="verdict" data-i18n="roundFinished">Раунд завершён</div>
+      <div class="final"><span id="finalScore">0</span><span class="u" data-i18n="points">очков</span></div>
+      <div class="place" id="placeLine"></div>
+      <div class="place hidden" id="streakLine"></div>
+    </div>
+    <div class="nameEntry">
+      <input id="nameInput" maxlength="12" placeholder="Твоё имя" data-i18n-placeholder="yourName" autocomplete="off" spellcheck="false">
+    </div>
+    <div class="board gameover-board" style="margin-top:10px;">
+      <div class="leaderboard-track">
+        <div class="leaderboard-track-name" id="goBoardTrackName">Трек</div>
+        <div class="leaderboard-track-max" id="goBoardTrackMax">Максимум: 0 очков</div>
+      </div>
+      <div class="bhead"><span data-i18n="onDevice">На этом устройстве</span><span data-i18n="top10">Топ 10</span></div>
+      <div class="rows" id="goRows"></div>
+    </div>
+    <div class="row2">
+      <button class="btn save" id="saveBtn" data-i18n="save">Сохранить</button>
+      <button class="btn soft-danger" id="menuBtn" data-i18n="returnWithoutSaving">Вернуться без сохранения</button>
+    </div>
+
+    <div id="gameoverTutorial" class="gameover-tutorial hidden" aria-hidden="true">
+      <div id="gameoverTutorialTop" class="gameover-tutorial-callout gameover-tutorial-top" data-i18n="tutorialFinishBoard">
+        После завершения мелодии перед Вами появится таблица лидеров.
+      </div>
+      <div id="gameoverTutorialName" class="gameover-tutorial-callout gameover-tutorial-name" data-i18n="tutorialFinishName">
+        Введите имя или никнейм, чтобы привязать к нему свой результат.
+      </div>
+      <div id="gameoverTutorialSave" class="gameover-tutorial-callout gameover-tutorial-save" data-i18n="tutorialFinishSave">
+        Нажмите кнопку «Сохранить», чтобы записать свой результат в таблицу лидеров.
+      </div>
+    </div>
+  </section>
+
+  <!-- EVENT COMPLETE -->
+  <section id="eventComplete" class="overlay hidden" aria-hidden="true">
+    <div class="event-complete-card">
+      <div class="event-complete-title" data-i18n="eventCompleted">Событие завершено!</div>
+      <div class="event-complete-sub" data-i18n="allDaysDone">Все дни пройдены!</div>
+      <div class="event-complete-score"><span data-i18n="score">Очки</span>: <strong id="eventCompleteScore">0</strong></div>
+      <div class="event-complete-days" aria-hidden="true">1 · 2 · 3 · 4 · 5 · 6 · 7 ✓</div>
+      <button class="btn event-reward-btn" id="eventRewardBtn" type="button" data-i18n="getReward">Получить награду</button>
+    </div>
+  </section>
+</div>
+</body>
+</html>
